@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp, deleteApp } from "firebase/app";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, setPersistence, inMemoryPersistence } from "firebase/auth";
-
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,10 +19,10 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 
+
+// Initialize Firebase
+// const analytics = getAnalytics(app);
 let firebaseApp;
 if (!getApps().length) {
     firebaseApp = initializeApp(firebaseConfig)
@@ -33,4 +33,8 @@ if (!getApps().length) {
 }
 
 const auth = getAuth(firebaseApp)
+export const db = getFirestore(firebaseApp)
 export default auth
+
+
+

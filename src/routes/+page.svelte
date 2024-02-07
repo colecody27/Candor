@@ -1,17 +1,16 @@
 <script>
-	import { GoogleAuthProvider } from "firebase/auth";
 	import { AppShell, AppBar, Avatar } from '@skeletonlabs/skeleton';
-  	import { authHandlers } from "../store/authStore";
+  	import { authHandlers, provider } from "../store/authStore";
 	import auth from '$lib/firebase/firebase.client'
+	
 
-	export const provider = new GoogleAuthProvider();
-	export let User
 	
 	async function handleLogin() {
-		User = await authHandlers.login(auth, provider)
+		/** @type {import("@firebase/auth").User} */
+		const User = await authHandlers.login(auth, provider)
 		if (User) {
-			console.log(User)
-			window.location.href = '/user' 
+			window.location.href = '/user/overview' 
+			return User
 		}
 		else
 			console.log("User not logged in")
@@ -30,7 +29,7 @@
 				<!--LOGIN-->
 				<button
 					class="btn btn variant-ghost-surface"
-					on:click={() => {handleLogin()}}> 
+					on:click={() => handleLogin()}> 
 					Login | Sign Up
 				</button>
 			</svelte:fragment>
@@ -61,8 +60,8 @@
 			<div class="flex justify-center space-x-2">
 			<button
 				class="btn variant-filled" 
-				on:click={() => {handleLogin()}}> 
-				Login 
+				on:click={() => {handleLogin()}}
+			>Login 
 			</button>
 			</div>
 		</div>
