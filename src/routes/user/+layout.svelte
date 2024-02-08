@@ -1,15 +1,14 @@
 <script lang="ts">
 	import '../../app.postcss';
 	import { AppShell, AppBar, Avatar, AppRail, AppRailTile, AppRailAnchor, popup, storePopup } from '@skeletonlabs/skeleton';
-	import { authHandlers} from '../../store/authStore';
+	import { authHandlers, authStore} from '../../store/authStore';
 	import auth from '$lib/firebase/firebase.client';
 	import {onMount, beforeUpdate} from 'svelte'
+	import { page } from '$app/stores';
 	import {onAuthStateChanged } from "firebase/auth"
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
-	import anaIcon from '$lib/static/analytics.png'
-	import appIcon from '$lib/static/applications.png'
-	import connIcon from '$lib/static/connections.png'
-	import overIcon from '$lib/static/overview.png'
+	import anaIcon from '$lib/static/analytics.png'; import appIcon from '$lib/static/applications.png'; import connIcon from '$lib/static/connections.png'; import overIcon from '$lib/static/overview.png'
+
 
 	// import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
 	// import {db} from '$lib/firebase/firebase.client' 
@@ -26,9 +25,6 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom',
 	};
-	
-	import { authStore } from '../../store/authStore';
-	let currentTile = 0
 
 	/** @type {import("@firebase/auth").User} */
 	export let User
@@ -89,40 +85,41 @@
 		</AppBar>
 	</svelte:fragment>
 
-		<!--Apprail-->
+	<!--Apprail-->
+	<svelte:fragment slot="sidebarLeft">
 		<AppRail>
 			<!-- Tiles -->
-			<AppRailAnchor href="overview" title="Account">
+			<AppRailAnchor href="overview" selected={$page.url.pathname==='/user/overview'}>
 				<svelte:fragment slot="lead">
 					<img src={overIcon} class = 'h-8' alt="">
 				</svelte:fragment>
 				<span>Overview</span>
 			</AppRailAnchor>
-			<AppRailAnchor href="applications" title="Account">
+			<AppRailAnchor href="applications" selected={$page.url.pathname==='/user/applications'}>
 				<svelte:fragment slot="lead">
 					<img src={appIcon} class = 'h-8' alt="">
 				</svelte:fragment>
 				<span>Applications</span>
 			</AppRailAnchor>
-			<AppRailAnchor href="analytics"  title="Account">
+			<AppRailAnchor href="analytics" selected={$page.url.pathname==='/user/analytics'}>
 				<svelte:fragment slot="lead">
 					<img src={anaIcon} class = 'h-8' alt="">
 				</svelte:fragment>
 				<span>Analytics</span>
 			</AppRailAnchor>
-			<AppRailAnchor href="connections"  title="Account">
+			<AppRailAnchor href="connections" selected={$page.url.pathname==='/user/connections'} >
 				<svelte:fragment slot="lead">
 					<img src={connIcon} class = 'h-8' alt="">
 				</svelte:fragment>
 				<span>Connections</span>
 			</AppRailAnchor>
 			<!-- --- -->
-
-			<!--<svelte:fragment slot="trail">
-				<AppRailAnchor href="/"  title="Account">(icon)</AppRailAnchor>
-			</svelte:fragment>-->
 		</AppRail>
+	</svelte:fragment>
+
 <slot/>
+
+<!-- Footer -->
 <svelte:fragment slot="footer">
 	<h1 class = 'text-center'>© 2024 Candor</h1>
 </svelte:fragment>
