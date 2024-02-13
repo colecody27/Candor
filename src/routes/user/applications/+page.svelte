@@ -2,6 +2,7 @@
     import { Accordion, AccordionItem, TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
     import Appdropdown from '../../../components/appdropdown.svelte';
     import Addapp from '../../../components/addapp.svelte'
+    import {dataHandlers} from '../../../store/fireStore'
 
     let tabSet = 0
     let term = "Spring 2024"
@@ -79,7 +80,7 @@
                         <svelte:fragment slot="content">(content)</svelte:fragment>
                     </AccordionItem>
                     <!-- ... -->
-                    <button class = ' flex m-auto btn-md btn variant-filled-error' >Remove Period</button>
+                    <button on:click = {dataHandlers.getApps} class = ' flex m-auto btn-md btn variant-filled-error' >Remove Period</button>
                 </Accordion>
                 
                 {:else if tabSet === 1}

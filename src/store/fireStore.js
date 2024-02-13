@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { db } from '$lib/firebase/firebase.client'
-import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore"; 
+import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
 import { authStore } from '../store/authStore';
 
 /** @type {import("@firebase/auth").User} */
@@ -17,11 +17,12 @@ export const dataHandlers = {
         // Create application to pass information
         const application = {
             Role : role,
-            Company : company
+            Company : company,
+            Term : term
         }
         
         // Add application to collection
-        const route = 'users/' + User.email + '/terms/' + term + '/applications'
+        const route = 'users/' + User.email + '/applications'
         const docRef = await addDoc(collection(db, route), application)
     },
 
@@ -51,11 +52,16 @@ export const dataHandlers = {
         // Add application to collection
         const route = 'users/' + User.email + '/applications'
         const docRef = await addDoc(collection(db, route), application)
-    }
+    },
 
     // GET ALL APPLICATIONS
     getApps: async () => {
-        const route = 'users/' + User.email + '/terms/'
+        const route = 'users/' + User.email + '/applications'
+        const querySnpsht = await getDocs(collection(db, route))
+
+        querySnpsht.forEach((doc) => {
+            console.log(doc.data())
+        })
     }
 
 }
