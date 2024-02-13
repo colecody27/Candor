@@ -24,22 +24,20 @@ export const authHandlers = {
         // /** @type {import("@firebase/auth").User} */
         User = result.user
 
-        // userA = createWrit(User.email, User.displayName)
-
         // CREATE NEW USER
-        // try {
-        //     if (User.email != null) {
-        //         const userRef = doc(db, "users", User.email)
-        //         const userSnap = await getDoc(userRef)
-        //         if (!userSnap.exists()) {
-        //             const userCreateRef = await setDoc(doc(db, "users", User.email), {
-        //                 name : User.displayName, 
-        //                 email : User.email,
-        //                 university : "",
-        //             }) 
-        //         }
-        //     }            
-        //   } catch (e) { console.error("Error adding document: ", e); }
+        try {
+            if (User.email != null) {
+                const userRef = doc(db, "users", User.email)
+                const userSnap = await getDoc(userRef)
+                if (!userSnap.exists()) {
+                    const userCreateRef = await setDoc(doc(db, "users", User.email), {
+                        name : User.displayName, 
+                        email : User.email,
+                        university : "",
+                    }) 
+                }
+            }            
+          } catch (e) { console.error("Error adding document: ", e); }
 
         return User
     },

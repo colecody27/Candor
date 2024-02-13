@@ -5,10 +5,13 @@
 </script>
 
 <!-- Overview Stats -->
-<Overviewstats/>
+<div class="mt-20">
+    <Overviewstats/>
+</div>
+
 
 <!-- Recent Applications -->
-<div class = 'w-3/4 m-auto'>
+<div class = 'w-3/4 m-auto mt-20'>
     <h1 class = 'text-3xl mb-5'>Recent Applications</h1>
     <Accordion>
         <div class = 'bg-error-600 rounded-b-xl'>

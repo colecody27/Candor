@@ -1,16 +1,22 @@
 <script>
-    let submission = false
+    let submission = true
 </script>
 
 <div class = ''>
     <!-- Status -->
-    <div class = ''>
-        <h3 class = 'inline-block text-2xl' >Status: </h3>
-        {#if submission}
-            <button class = 'variant-filled inline-block btn btn-sm'>Submitted</button>
-        {:else}
-            <button class = 'variant-filled-error inline-block btn btn-sm '>Submitted</button>
-        {/if}
+    <div class = 'justify-between flex'>
+        <div>
+            <h3 class = 'inline-block text-2xl' >Status: </h3>
+            {#if submission}
+                <button class = 'variant-filled inline-block btn btn-sm'>Submitted</button>
+            {:else}
+                <button class = 'variant-filled-error inline-block btn btn-sm '>Submitted</button>
+            {/if}
+        </div>
+    <!-- Delete -->
+    <div class = inline-block>
+        <button class = 'inline-block btn-md btn variant-filled-error' >Remove</button>
+    </div>
     </div>
 
     <!-- Interviews  -->
