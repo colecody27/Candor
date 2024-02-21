@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { db } from '$lib/firebase/firebase.client'
 import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
-import { authStore } from '../store/authStore';
+import { authStore } from './authStore';
 
 /** @type {import("@firebase/auth").User} */
 let User
@@ -58,10 +58,11 @@ export const dataHandlers = {
     getApps: async () => {
         const route = 'users/' + User.email + '/applications'
         const querySnpsht = await getDocs(collection(db, route))
-
+        const applications = []
         querySnpsht.forEach((doc) => {
-            console.log(doc.data())
+            applications.push(doc.data)
         })
+        
     }
 
 }

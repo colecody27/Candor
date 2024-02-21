@@ -2,13 +2,27 @@
 	import '../app.postcss';
 	import {onMount} from 'svelte'
 	import auth from '$lib/firebase/firebase.client'
-	import { authStore } from '../store/authStore';
+	import { authStore} from '../lib/store/authStore';
+	import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
+	import { db } from '$lib/firebase/firebase.client'
+
 
 	onMount(() => {
-		auth.onAuthStateChanged((User) => {
-			authStore.update((curr) => {
-				return {...curr, isLoading:false, currentUser:true, user: User}
-			})
+		const unsubscribe = auth.onAuthStateChanged(async (User) => {
+			// Load applications 
+			if (User) { 
+				const route = 'users/' + User?.email + '/applications'
+				const querySnpsht = await getDocs(collection(db, route))
+				const tempApps = [{}]
+				querySnpsht.forEach((doc) => {
+					tempApps.push(doc.data())
+				})
+			
+				// Update store
+				authStore.update((curr) => {
+					return {...curr, isLoading:false, currentUser:true, user: User, apps : tempApps}
+				})
+			}
 		})
 	})
 

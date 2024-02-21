@@ -3,8 +3,8 @@
     import Appdropdown from '../components/appdropdown.svelte';
     import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore"; 
     import { db } from '$lib/firebase/firebase.client'
-    import { authStore } from '../store/authStore';
-    import {dataHandlers} from '../store/fireStore'
+    import { authStore } from '../lib/store/authStore';
+    import {dataHandlers} from '../lib/store/fireStore'
 
     let role = ""
     let company = ""

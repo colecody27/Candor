@@ -1,9 +1,7 @@
 <script>
 	import { AppShell, AppBar, Avatar } from '@skeletonlabs/skeleton';
-  	import { authHandlers, provider } from "../store/authStore";
+  	import { authHandlers, provider } from "../lib/store/authStore";
 	import auth from '$lib/firebase/firebase.client'
-	
-
 	
 	async function handleLogin() {
 		/** @type {import("@firebase/auth").User} */

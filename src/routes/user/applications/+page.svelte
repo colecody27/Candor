@@ -2,7 +2,13 @@
     import { Accordion, AccordionItem, TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
     import Appdropdown from '../../../components/appdropdown.svelte';
     import Addapp from '../../../components/addapp.svelte'
-    import {dataHandlers} from '../../../store/fireStore'
+    import {dataHandlers} from '../../../lib/store/fireStore'
+    import { authStore } from '../../../lib/store/authStore';
+	import { onMount } from 'svelte';
+
+    $: applications = $authStore?.apps
+    
+    $: console.log(applications)
 
     let tabSet = 0
     let term = "Spring 2024"

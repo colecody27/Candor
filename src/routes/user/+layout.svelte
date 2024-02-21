@@ -1,17 +1,15 @@
 <script lang="ts">
 	import '../../app.postcss';
 	import { AppShell, AppBar, Avatar, AppRail, AppRailTile, AppRailAnchor, popup, storePopup } from '@skeletonlabs/skeleton';
-	import { authHandlers, authStore} from '../../store/authStore';
+	import { authHandlers, authStore} from '../../lib/store/authStore';
 	import auth from '$lib/firebase/firebase.client';
 	import {onMount, beforeUpdate} from 'svelte'
 	import { page } from '$app/stores';
 	import {onAuthStateChanged } from "firebase/auth"
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
 	import anaIcon from '$lib/static/analytics.png'; import appIcon from '$lib/static/applications.png'; import connIcon from '$lib/static/connections.png'; import overIcon from '$lib/static/overview.png'
-
-
-	// import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
-	// import {db} from '$lib/firebase/firebase.client' 
+	import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore";
+	import {db} from '$lib/firebase/firebase.client' 
 
 	// Instantiate pop up 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
@@ -41,6 +39,7 @@
 			window.location.href = '/'
 	})
   	});
+	
 
 	// Logout
 	async function handleLogout() {
