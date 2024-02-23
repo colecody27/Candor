@@ -12,7 +12,8 @@ export const authStore = writable({
     isLoading : true, 
     currentUser : false,
     user : null,
-    apps : [{}]
+    terms : ["No term"],
+    apps : []
 })
     
 // Object to handle login and logout functions

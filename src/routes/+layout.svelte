@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { initializeStores, Modal } from '@skeletonlabs/skeleton';
 	import '../app.postcss';
 	import {onMount} from 'svelte'
 	import auth from '$lib/firebase/firebase.client'
@@ -6,8 +7,10 @@
 	import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
 	import { db } from '$lib/firebase/firebase.client'
 
+	// Initialization for modal
+	initializeStores();
 
-	onMount(() => {
+	onMount(() => {	
 		const unsubscribe = auth.onAuthStateChanged(async (User) => {
 			// Load applications 
 			if (User) { 
@@ -29,5 +32,5 @@
 
 </script>
 
-
+<Modal />
 <slot/>

@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { db } from '$lib/firebase/firebase.client'
-import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
+import { collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, arrayUnion } from "firebase/firestore"; 
 import { authStore } from './authStore';
 
 /** @type {import("@firebase/auth").User} */
@@ -9,21 +9,32 @@ authStore.subscribe((curr) => {
     User = curr?.user
 })
 
-
-
 export const dataHandlers = {
     // ADD APPLICATION 
     addApp: async (role, company, term) => {
-        // Create application to pass information
+        
+        // CREATE APP
         const application = {
-            Role : role,
             Company : company,
-            Term : term
+            Role : role,
+            Term : term,
+            Status : "Submitted", 
+            Interviews : "None",
+            Location : "TBD", 
+            Platform : "TBD",
+            Topics : ["TBD", "TBD"]
         }
         
-        // Add application to collection
+        // UPDATE DB
         const route = 'users/' + User.email + '/applications'
         const docRef = await addDoc(collection(db, route), application)
+
+        // UPDATE LOCAL STORAGE 
+        if (docRef) {
+            authStore.update((curr) => {
+                return {...curr, apps:[...curr.apps, application]}
+            })
+        }
     },
 
     // UPDATE APPLICATION 
@@ -63,7 +74,25 @@ export const dataHandlers = {
             applications.push(doc.data)
         })
         
-    }
+    },
+
+    // ADD APPLICATION 
+    addTerm: async (term) => {
+        
+        // UPDATE DB
+        const route = 'users/' + User.email
+        const docRef = doc(db, route)
+        await updateDoc(docRef, {
+            terms: arrayUnion(term)
+        });
+
+        // UPDATE LOCAL STORAGE 
+        if (docRef) {
+            authStore.update((curr) => {
+                return {...curr, terms:[term, ...curr.terms]}
+            })
+        }
+    },    
 
 }
 
