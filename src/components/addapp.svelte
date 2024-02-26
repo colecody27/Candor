@@ -27,7 +27,7 @@
     </div>
     <!-- Location -->
     <div class= "inline-block">
-        <h3 class = 'text-l text-center'>Period</h3>
+        <h3 class = 'text-l text-center'>Location</h3>
         <input class = 'input'  bind:value={location} type="text">
     </div>
     <button on:click={()=> {
@@ -35,8 +35,8 @@
         dataHandlers.addApp(role, company, term)
 
         // RESET VALUES
-        role = ""
         company = "" 
+        location = ""
         }}
         class =' btn-icon h-8  w-8 variant-filled-secondary'><img class = 'h-6 w-6 m-auto' src={addIcon} alt=""></button>
 </div>

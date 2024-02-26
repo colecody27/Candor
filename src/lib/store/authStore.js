@@ -12,7 +12,7 @@ export const authStore = writable({
     isLoading : true, 
     currentUser : false,
     user : null,
-    terms : ["No term"],
+    terms : [],
     apps : []
 })
     
@@ -35,6 +35,7 @@ export const authHandlers = {
                         name : User.displayName, 
                         email : User.email,
                         university : "",
+                        terms : ["No term"]
                     }) 
                 }
             }            

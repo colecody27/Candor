@@ -12,18 +12,23 @@
 
 	onMount(() => {	
 		const unsubscribe = auth.onAuthStateChanged(async (User) => {
-			// Load applications 
+			// Load data
 			if (User) { 
-				const route = 'users/' + User?.email + '/applications'
-				const querySnpsht = await getDocs(collection(db, route))
+				// Applications
+				const appsRoute = 'users/' + User?.email + '/applications'
+				const querySnpsht = await getDocs(collection(db, appsRoute))
 				const tempApps = [{}]
 				querySnpsht.forEach((doc) => {
 					tempApps.push(doc.data())
 				})
+				
+				// Terms
+				const userRef = doc(db, 'users', User.email)
+				const userSnpsht = await getDoc(userRef)
 			
 				// Update store
 				authStore.update((curr) => {
-					return {...curr, isLoading:false, currentUser:true, user: User, apps : tempApps}
+					return {...curr, isLoading:false, currentUser:true, user: User, apps : tempApps, terms : userSnpsht.data()?.terms}
 				})
 			}
 		})
