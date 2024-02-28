@@ -18,8 +18,19 @@
 				const appsRoute = 'users/' + User?.email + '/applications'
 				const querySnpsht = await getDocs(collection(db, appsRoute))
 				const tempApps = [{}]
+				
+				// Iterate through data
 				querySnpsht.forEach((doc) => {
-					tempApps.push(doc.data())
+					// Get data 
+					let docData = doc.data()
+
+					// Add reference to get doc from DB
+					docData.Id = doc.id
+
+					// Convert interview data to array of values
+					docData.Interviews = Object.entries(docData.Interviews)
+
+					tempApps.push(docData)
 				})
 				
 				// Terms
@@ -28,7 +39,7 @@
 			
 				// Update store
 				authStore.update((curr) => {
-					return {...curr, isLoading:false, currentUser:true, user: User, apps : tempApps, terms : userSnpsht.data()?.terms}
+					return {...curr, isLoading:false, currentUser:true, user:User, apps:tempApps, terms:userSnpsht.data()?.terms}
 				})
 			}
 		})

@@ -10,6 +10,16 @@
     let role = ""
     let company = ""
     let location = ""
+
+    const handleSubmission = async (e, r, c, t) => {
+        if(e.key == 'Enter' || e.key == 13) {
+            dataHandlers.addApp(r, c, t)
+            company = "" 
+            location = ""
+        }
+            
+
+    }
     export let term = ""
 
 </script>
@@ -18,17 +28,17 @@
     <!-- Role -->
     <div class= "inline-block">
         <h3 class = 'text-l text-center'>Role</h3>
-        <input class = 'input' bind:value={role} type="text">
+        <input class = 'input' bind:value={role} type="text" on:keydown={async (e) => {handleSubmission(e, role, company, term)}}>
     </div>
     <!-- Company  -->
     <div class= "inline-block">
         <h3 class = 'text-l text-center'>Company</h3>
-        <input class = 'input'  bind:value={company} type="text">
+        <input class = 'input'  bind:value={company} type="text"  on:keydown={async (e) => {handleSubmission(e, role, company, term)}}>
     </div>
     <!-- Location -->
     <div class= "inline-block">
         <h3 class = 'text-l text-center'>Location</h3>
-        <input class = 'input'  bind:value={location} type="text">
+        <input class = 'input'  bind:value={location} type="text" on:keydown={async (e) => {handleSubmission(e, role, company, term)}}>
     </div>
     <button on:click={()=> {
         // ADD APP

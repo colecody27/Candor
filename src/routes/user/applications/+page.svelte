@@ -9,10 +9,7 @@
     import { getModalStore } from '@skeletonlabs/skeleton';
 			
     const modalStore = getModalStore();
-
-
     let tabSet = $authStore?.terms[0]
-
 </script>
 
 <!-- Recommended Roles -->
@@ -45,7 +42,6 @@
 </div>
 
 <div class = 'w-3/4 m-auto mt-20'>
-    <!-- <Addapp/> -->
     <!-- Applications -->
     <div class = ' m-auto mt-20'>
         <h1 class = 'text-3xl mb-5'>Applications</h1>
@@ -56,7 +52,7 @@
             {#each $authStore.terms as term}
                 <Tab bind:group={tabSet} name="tab1" value={term}>
                     <svelte:fragment slot="lead">{term}</svelte:fragment>
-                    <span>2 Apps</span>
+                    <span>{$authStore.apps.filter((t) => t.Term === term).length} apps</span>
                 </Tab>
             {/each}
 
@@ -105,7 +101,7 @@
                                     </svelte:fragment>
                                     <svelte:fragment slot="content">
                                         <div class="card p-4">
-                                            <Appdropdown/>
+                                            <Appdropdown company={app?.Company} role={app?.Role} status={app?.Status} term={app?.Status} location={app?.Location} platform={app?.Platform} topics={app?.Topics} docID={app?.Id} interviews={app?.Interviews}/>
                                         </div>
                                     </svelte:fragment>
                                 </AccordionItem>
