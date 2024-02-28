@@ -7,6 +7,7 @@
     import {dataHandlers} from '../lib/store/fireStore'
 	import { AppShell } from '@skeletonlabs/skeleton';
 
+    export let term = ""
     let role = ""
     let company = ""
     let location = ""
@@ -17,10 +18,8 @@
             company = "" 
             location = ""
         }
-            
-
     }
-    export let term = ""
+    
 
 </script>
 

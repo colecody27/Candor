@@ -3,7 +3,7 @@
     import { authStore } from "$lib/store/authStore";
     import addIcon from '$lib/static/add.png'
     import removeIcon from '$lib/static/removeIcon.png'
-    import { getModalStore } from '@skeletonlabs/skeleton';
+    import { getModalStore, InputChip } from '@skeletonlabs/skeleton';
 			
     const modalStore = getModalStore();
     export let company = ""
@@ -15,15 +15,22 @@
     export let topics = []
     export let interviews = [[]]
     export let docID = ""
+    export let notes = ""
 
-    $: if (platform) {
-        dataHandlers.updatePlatform(docID, platform)
+    // Watch for changes in selections
+    $: if (platform) { dataHandlers.updatePlatform(docID, platform) }
+    $: if (topics) { dataHandlers.updateTopics(docID, topics)}
+
+    const handleNoteSubmission = async (e) => {
+        if(e.key == 'Enter' || e.key == 13) {
+            dataHandlers.updateNotes(docID, notes)
+        }
     }
 </script>
 
 <div class = ''>
     <!-- Status -->
-    <div class = 'justify-between flex'>
+    <div class = 'justify-between flex '>
         <div>
             <h3 class = 'inline-block text-2xl' >Status: </h3>
             {#if status}
@@ -99,14 +106,13 @@
         </select>
         
         <h2 class = 'ml-4 mt-2 inline-block'>Topics: </h2> 
-        <!-- <button class = 'variant-filled inline-block btn btn-sm'>BST</button>
-        <button class = 'variant-filled inline-block btn btn-sm'>Array</button> 
-        <button class = 'variant-filled inline-block btn btn-sm'>DP</button> -->
+        <InputChip class='min-w-80 max-w-max' bind:value={topics} name="chips" placeholder="Enter any topic related to the OA..." />
+
     </div>
 
     <!-- Notes-->
     <div class = 'mt-4'>
-        <h3 class = 'text-2xl' >Notes: </h3>
-        <input class = 'input' type="text">
+        <h3 class = 'text-2xl' >Notes </h3>
+        <textarea class='textarea' rows=3 bind:value={notes} on:keydown={async (e) => {handleNoteSubmission(e)}}  />
     </div>
 </div>

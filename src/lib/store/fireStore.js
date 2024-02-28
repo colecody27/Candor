@@ -13,7 +13,6 @@ authStore.subscribe((curr) => {
 export const dataHandlers = {
     // ADD APPLICATION 
     addApp: async (role, company, term) => {
-        
         // CREATE APP
         const application = {
             Company : company,
@@ -23,6 +22,7 @@ export const dataHandlers = {
             Interviews : {},
             Location : "TBD", 
             Platform : "Unknown",
+            Notes : "", 
             Topics : []
         }
         
@@ -217,6 +217,46 @@ export const dataHandlers = {
             authStore.update((curr) => {
                 const indx = curr.apps.findIndex((app) => app.Id === id)
                 curr.apps.at(indx).Platform = platform
+                return curr
+            })
+        }
+    },
+
+    // UPDATE TOPICS 
+    updateTopics: async (id, topics) => {
+        // UPDATE DB
+        const route = 'users/' + User.email + '/applications/' + id
+        const docRef = doc(db, route)
+
+        await updateDoc(docRef, {
+            Topics : topics
+        });
+
+        // UPDATE LOCAL STORAGE 
+        if (docRef) {
+            authStore.update((curr) => {
+                const indx = curr.apps.findIndex((app) => app.Id === id)
+                curr.apps.at(indx).Topics = topics
+                return curr
+            })
+        }
+    },
+
+    // UPDATE NOTES 
+    updateNotes: async (id, note) => {
+        // UPDATE DB
+        const route = 'users/' + User.email + '/applications/' + id
+        const docRef = doc(db, route)
+
+        await updateDoc(docRef, {
+            Notes : note
+        });
+
+        // UPDATE LOCAL STORAGE 
+        if (docRef) {
+            authStore.update((curr) => {
+                const indx = curr.apps.findIndex((app) => app.Id === id)
+                curr.apps.at(indx).Notes = note
                 return curr
             })
         }

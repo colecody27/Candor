@@ -101,7 +101,7 @@
                                     </svelte:fragment>
                                     <svelte:fragment slot="content">
                                         <div class="card p-4">
-                                            <Appdropdown company={app?.Company} role={app?.Role} status={app?.Status} term={app?.Status} location={app?.Location} platform={app?.Platform} topics={app?.Topics} docID={app?.Id} interviews={app?.Interviews}/>
+                                            <Appdropdown company={app?.Company} role={app?.Role} status={app?.Status} term={app?.Status} location={app?.Location} platform={app?.Platform} topics={app?.Topics} docID={app?.Id} interviews={app?.Interviews} notes={app?.Notes}/>
                                         </div>
                                     </svelte:fragment>
                                 </AccordionItem>
