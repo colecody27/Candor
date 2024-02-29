@@ -6,6 +6,7 @@
     import { authStore } from '../../../lib/store/authStore';
 	import { onMount } from 'svelte';
     import addIcon from '$lib/static/add.png'
+    import editIcon from '$lib/static/editIcon.png'
     import { getModalStore } from '@skeletonlabs/skeleton';
 			
     const modalStore = getModalStore();
@@ -51,7 +52,30 @@
             <!-- TABS -->
             {#each $authStore.terms as term}
                 <Tab bind:group={tabSet} name="tab1" value={term}>
-                    <svelte:fragment slot="lead">{term}</svelte:fragment>
+                    <svelte:fragment slot="lead">
+                        {term}
+                        <button on:click = { async () => {
+                            // MODAL
+                            new Promise((resolve) => {
+                                const modal = {
+                                    type: 'prompt',
+                                    // Data
+                                    title: 'Rename Term',
+                                    body: 'Provide a new name for this term in the field below.',
+                                    // Populates the input value and attributes
+                                    value: `${term}`,
+                                    valueAttr: { type: 'text', minlength: 4, maxlength: 20, required: true },
+                                    // Returns the updated response value
+                                    response: (r) => resolve(r)  
+                                };
+                                modalStore.trigger(modal);
+                            }).then(async (r) => {
+                                if (r)
+                                    await dataHandlers.editTerm(term, r)
+                            })
+                        }} 
+                        class = 'btn-icon h-4  w-4 '><img class = 'm-auto' src={editIcon} alt=""></button>
+                    </svelte:fragment>
                     <span>{$authStore.apps.filter((t) => t.Term === term).length} apps</span>
                 </Tab>
             {/each}
@@ -101,7 +125,7 @@
                                     </svelte:fragment>
                                     <svelte:fragment slot="content">
                                         <div class="card p-4">
-                                            <Appdropdown company={app?.Company} role={app?.Role} status={app?.Status} term={app?.Status} location={app?.Location} platform={app?.Platform} topics={app?.Topics} docID={app?.Id} interviews={app?.Interviews} notes={app?.Notes}/>
+                                            <Appdropdown app={app}/>
                                         </div>
                                     </svelte:fragment>
                                 </AccordionItem>

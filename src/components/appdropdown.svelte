@@ -6,25 +6,21 @@
     import { getModalStore, InputChip } from '@skeletonlabs/skeleton';
 			
     const modalStore = getModalStore();
-    export let company = ""
-    export let role = ""
-    export let status = true
-    export let term = ""
-    export let location = "Unknown"
-    export let platform = ""
-    export let topics = []
-    export let interviews = [[]]
-    export let docID = ""
-    export let notes = ""
+    export let app = {}
+    let tempNotes = app.Notes
 
     // Watch for changes in selections
-    $: if (platform) { dataHandlers.updatePlatform(docID, platform) }
-    $: if (topics) { dataHandlers.updateTopics(docID, topics)}
-
+    $: {
+        dataHandlers.updatePlatform(app.Id, app.Platform)
+        console.log("Update platform")
+    }
+    $: { 
+        dataHandlers.updateTopics(app.Id, app.Topics) 
+        console.log("Update topics")
+    }
     const handleNoteSubmission = async (e) => {
-        if(e.key == 'Enter' || e.key == 13) {
-            dataHandlers.updateNotes(docID, notes)
-        }
+        if(e.key == 'Enter' || e.key == 13) 
+            dataHandlers.updateNotes(app.Id, tempNotes)
     }
 </script>
 
@@ -33,15 +29,15 @@
     <div class = 'justify-between flex '>
         <div>
             <h3 class = 'inline-block text-2xl' >Status: </h3>
-            {#if status}
-                <button class = 'variant-filled inline-block btn btn-sm' on:click = {() => {dataHandlers.updateStatus(docID, !status)}} >Submitted</button>
+            {#if app.Status}
+                <button class = 'variant-filled inline-block btn btn-sm' on:click = {() => {dataHandlers.updateStatus(app.Id, !app.Status)}} >Submitted</button>
             {:else}
-                <button class = 'variant-filled-error inline-block btn btn-sm'  on:click = {() => {dataHandlers.updateStatus(docID, !status)}}>Rejected</button>
+                <button class = 'variant-filled-error inline-block btn btn-sm'  on:click = {() => {dataHandlers.updateStatus(app.Id, !app.Status)}}>Rejected</button>
             {/if}
         </div>
     <!-- Delete -->
     <div class = inline-block>
-        <button class = 'inline-block btn-md btn variant-filled-error' on:click = {() => {dataHandlers.removeApp(docID)}} >Remove</button>
+        <button class = 'inline-block btn-md btn variant-filled-error' on:click = {() => {dataHandlers.removeApp(app.Id)}} >Remove</button>
     </div>
     </div>
 
@@ -65,7 +61,7 @@
                     modalStore.trigger(modal);
                 }).then(async (r) => {
                     if (r)
-                        await dataHandlers.addInterview(docID, r)
+                        await dataHandlers.addInterview(app.Id, r)
                     })
                 }}
                 class =' btn-icon h-6  w-6 variant-filled-secondary'><img class = 'h-4 w-4 m-auto' src={addIcon} alt="">
@@ -73,16 +69,16 @@
         </h3>
        
         <ul>
-            {#each interviews as [key, value] }
+            {#each app.Interviews as [key, value] }
                 <li class = 'ml-4 mt-2'> 
-                    <button class="btn-icon h-4  w-4 variant-filled-error" on:click = {() => {dataHandlers.removeInterview(docID, key)}}><img class = 'h-4 w-4 m-auto' src={removeIcon} alt=""></button>
+                    <button class="btn-icon h-4  w-4 variant-filled-error" on:click = {() => {dataHandlers.removeInterview(app.Id, key)}}><img class = 'h-4 w-4 m-auto' src={removeIcon} alt=""></button>
                     <h2 class = 'inline-block'>{key}:</h2>
                     {#if value === "Rejected"}
-                        <button class = 'variant-filled-error inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(docID, key, value)}}>{value}</button>    
+                        <button class = 'variant-filled-error inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>    
                     {:else if value === "Pending"}
-                        <button class = 'variant-filled-secondary inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(docID, key, value)}}>{value}</button>    
+                        <button class = 'variant-filled-secondary inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>    
                     {:else}
-                        <button class = 'variant-filled inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(docID, key, value)}}>{value}</button>
+                        <button class = 'variant-filled inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>
                     {/if}
                 </li>
             {/each}
@@ -93,7 +89,7 @@
     <div class = 'mt-4 flex flex-col'>
         <h3 class = 'text-2xl'>Online Assessment:</h3>
         <h2 class = 'ml-4 mt-2 inline-block'>Platform: </h2> 
-        <select bind:value={platform} class="select max-w-max">
+        <select bind:value={app.Platform} class="select max-w-max">
             <option value="Unknown">Unknown</option>
             <option value="CodeSignal">CodeSignal</option>
             <option value="Leetcode">Leetcode</option>
@@ -106,13 +102,13 @@
         </select>
         
         <h2 class = 'ml-4 mt-2 inline-block'>Topics: </h2> 
-        <InputChip class='min-w-80 max-w-max' bind:value={topics} name="chips" placeholder="Enter any topic related to the OA..." />
+        <InputChip class='min-w-80 max-w-max' bind:value={app.Topics} name="chips" placeholder="Enter any topic related to the OA..." />
 
     </div>
 
     <!-- Notes-->
     <div class = 'mt-4'>
         <h3 class = 'text-2xl' >Notes </h3>
-        <textarea class='textarea' rows=3 bind:value={notes} on:keydown={async (e) => {handleNoteSubmission(e)}}  />
+        <textarea class='textarea' rows=3 bind:value={tempNotes} on:keydown={async (e) => {handleNoteSubmission(e)}}  />
     </div>
 </div>

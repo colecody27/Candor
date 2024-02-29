@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { db } from '$lib/firebase/firebase.client'
-import { collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, arrayUnion, query, where, deleteDoc, deleteField} from "firebase/firestore"; 
+import { collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, query, where, deleteDoc, deleteField} from "firebase/firestore"; 
 import { authStore } from './authStore';
 import { update } from "firebase/database";
 
@@ -26,6 +26,7 @@ export const dataHandlers = {
             Topics : []
         }
         
+        console.log("add app ")
         // UPDATE DB
         const route = 'users/' + User.email + '/applications'
         const docRef = await addDoc(collection(db, route), application)
@@ -40,10 +41,9 @@ export const dataHandlers = {
 
     // UPDATE STATUS
     updateStatus: async (id, status) => {
+        // UPDATE DB 
         const route = 'users/' + User.email + '/applications/' + id
         const docRef = doc(db, route)
-        
-        // UPDATE DB 
         await updateDoc(docRef, {"Status" : status})
 
         // UPDATE LOCAL STORAGE 
@@ -95,11 +95,12 @@ export const dataHandlers = {
         
     },
 
-    // ADD APPLICATION 
+    // ADD TERM 
     addTerm: async (term) => {
         // UPDATE DB
         const route = 'users/' + User.email
         const docRef = doc(db, route)
+
         await updateDoc(docRef, {
             terms: arrayUnion(term)
         });
@@ -111,6 +112,45 @@ export const dataHandlers = {
             })
         }
     },
+
+    // EDIT TERM 
+    editTerm: async (oldTerm, newTerm) => {
+        // Update list of terms and every application with that term
+        const appRoute = 'users/' + User.email + '/applications'
+        const q = query(collection(db, appRoute), where("Term", "==", oldTerm));
+        const querySnapshot = await getDocs(q);
+
+        // DB - Update every application 
+        querySnapshot.forEach(async (app) => {
+            const route = 'users/' + User.email + '/applications/' + app.id
+            const docRef = doc(db, route)
+            await updateDoc((docRef), {
+                Term : newTerm
+            })
+        })
+
+        // DB - Update list of terms
+        const termRoute = 'users/' + User.email 
+        const termRef = doc(db, termRoute)
+        await updateDoc((termRef), {
+            "Terms" : arrayRemove(oldTerm)
+        })
+
+        // UPDATE LOCAL STORAGE 
+        if (termRef) {
+            authStore.update((curr) => {
+                for (var i = 0; i < curr.apps.length; i++) {
+                    if (curr.apps.at(i).Term === oldTerm)
+                        curr.apps.at(i).Term = newTerm
+                }
+                const indx = curr.terms.findIndex(oldTerm)
+                if (indx > -1)
+                    curr.terms.splice(indx, 1)
+                return curr
+            })
+        }
+    },
+
     
      // ADD INTERVIEW  
      addInterview: async (id, interview) => {
@@ -205,40 +245,25 @@ export const dataHandlers = {
     // UPDATE PLATFORM  
     updatePlatform: async (id, platform) => {
         // UPDATE DB
-        const route = 'users/' + User.email + '/applications/' + id
-        const docRef = doc(db, route)
-
-        await updateDoc(docRef, {
-            Platform : platform
-        });
-
-        // UPDATE LOCAL STORAGE 
-        if (docRef) {
-            authStore.update((curr) => {
-                const indx = curr.apps.findIndex((app) => app.Id === id)
-                curr.apps.at(indx).Platform = platform
-                return curr
-            })
+        if (platform && id) {
+            const route = 'users/' + User.email + '/applications/' + id
+            const docRef = doc(db, route)
+            await updateDoc(docRef, {
+                Platform : platform
+            });
         }
+        
     },
 
     // UPDATE TOPICS 
     updateTopics: async (id, topics) => {
-        // UPDATE DB
-        const route = 'users/' + User.email + '/applications/' + id
-        const docRef = doc(db, route)
-
-        await updateDoc(docRef, {
-            Topics : topics
-        });
-
-        // UPDATE LOCAL STORAGE 
-        if (docRef) {
-            authStore.update((curr) => {
-                const indx = curr.apps.findIndex((app) => app.Id === id)
-                curr.apps.at(indx).Topics = topics
-                return curr
-            })
+        if (topics && id) {
+             // UPDATE DB
+            const route = 'users/' + User.email + '/applications/' + id
+            const docRef = doc(db, route)
+            await updateDoc(docRef, {
+                Topics : topics
+            });
         }
     },
 
