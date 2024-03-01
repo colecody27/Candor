@@ -2,6 +2,10 @@
     import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
     import Appdropdown from '../../../components/appdropdown.svelte';
     import Overviewstats from '../../../components/overviewstats.svelte';
+    import { authStore } from '$lib/store/authStore';
+
+    const recentApps = $authStore.apps.slice(0, 10)
+
 </script>
 
 <!-- Overview Stats -->
@@ -14,28 +18,19 @@
 <div class = 'w-3/4 m-auto mt-20'>
     <h1 class = 'text-3xl mb-5'>Recent Applications</h1>
     <Accordion>
-        <div class = 'bg-error-600 rounded-b-xl'>
-            <AccordionItem >
-                <svelte:fragment slot="lead"><h3 class = 'text-lg'>Software Engineer, AWS</h3></svelte:fragment>
+        {#each recentApps as app}
+            <AccordionItem>
+                <svelte:fragment slot="lead"><h3 class = 'text-lg'>{app?.Role}, {app?.Company}</h3></svelte:fragment>
                 <svelte:fragment slot="summary">
-                    <p class = 'text-right'>Jan 3, 2024</p>
+                    <p class = 'text-right'>{app?.Date.toDate().toLocaleDateString('en-us', {month:"short", day:"numeric", year:"numeric"})}</p>
                 </svelte:fragment>
                 <svelte:fragment slot="content">
                     <div class="card p-4">
-                        <Appdropdown/>
+                        <Appdropdown app={app}/>
                     </div>
-            </svelte:fragment>
+                </svelte:fragment>
             </AccordionItem>
-        </div>
-        
-        <AccordionItem>
-            <svelte:fragment slot="lead"><h3 class = 'text-lg'>Software Engineer, Netflix</h3></svelte:fragment>
-            <svelte:fragment slot="summary">
-                <p class = 'text-right'>Feb 3, 2024</p>
-            </svelte:fragment>
-            <svelte:fragment slot="content">(content)</svelte:fragment>
-        </AccordionItem>
-        <!-- ... -->
-    </Accordion>
+        {/each}
+</Accordion>
 </div>
 
