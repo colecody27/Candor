@@ -69,19 +69,21 @@
         </h3>
        
         <ul>
-            {#each app.Interviews as [key, value] }
-                <li class = 'ml-4 mt-2'> 
-                    <button class="btn-icon h-4  w-4 variant-filled-error" on:click = {() => {dataHandlers.removeInterview(app.Id, key)}}><img class = 'h-4 w-4 m-auto' src={removeIcon} alt=""></button>
-                    <h2 class = 'inline-block'>{key}:</h2>
-                    {#if value === "Rejected"}
-                        <button class = 'variant-filled-error inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>    
-                    {:else if value === "Pending"}
-                        <button class = 'variant-filled-secondary inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>    
-                    {:else}
-                        <button class = 'variant-filled inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>
-                    {/if}
-                </li>
-            {/each}
+            {#if app.Interviews.length >= 1}
+                {#each app.Interviews as [key, value] }
+                    <li class = 'ml-4 mt-2'> 
+                        <button class="btn-icon h-4  w-4 variant-filled-error" on:click = {() => {dataHandlers.removeInterview(app.Id, key)}}><img class = 'h-4 w-4 m-auto' src={removeIcon} alt=""></button>
+                        <h2 class = 'inline-block'>{key}:</h2>
+                        {#if value === "Rejected"}
+                            <button class = 'variant-filled-error inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>    
+                        {:else if value === "Pending"}
+                            <button class = 'variant-filled-secondary inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>    
+                        {:else}
+                            <button class = 'variant-filled inline-block btn btn-sm' on:click = {() => {dataHandlers.updateInterview(app.Id, key, value)}}>{value}</button>
+                        {/if}
+                    </li>
+                {/each}
+            {/if}
         </ul>
     </div>
 
@@ -109,6 +111,6 @@
     <!-- Notes-->
     <div class = 'mt-4'>
         <h3 class = 'text-2xl' >Notes </h3>
-        <textarea class='textarea' rows=3 bind:value={tempNotes} on:keydown={async (e) => {handleNoteSubmission(e)}}  />
+        <textarea class='textarea' rows=3 placeholder="Press enter upon completion to save..." bind:value={tempNotes} on:keydown={async (e) => {handleNoteSubmission(e)}}  />
     </div>
 </div>

@@ -70,13 +70,16 @@
                                 };
                                 modalStore.trigger(modal);
                             }).then(async (r) => {
-                                if (r)
+                                if (r) {
                                     await dataHandlers.editTerm(term, r)
+                                    tabSet = r
+                                }
+                                    
                             })
                         }} 
                         class = 'btn-icon h-4  w-4 '><img class = 'm-auto' src={editIcon} alt=""></button>
                     </svelte:fragment>
-                    <span>{$authStore.apps.filter((t) => t.Term === term).length} apps</span>
+                    <span>{$authStore.apps.filter((app) => app.Term === term).length} apps</span>
                 </Tab>
             {/each}
 
@@ -111,7 +114,7 @@
 
             <!-- TAB CONTENTS -->
             <svelte:fragment slot="panel">
-                {#if $authStore.terms.length == 1}
+                {#if $authStore.terms.length == 0}
                     <h3 class = 'text-2xl m-auto text-center' >Add a new term to get started</h3>
                 {:else}
                     <Addapp term = {tabSet}/>
@@ -121,7 +124,7 @@
                                 <AccordionItem>
                                     <svelte:fragment slot="lead"><h3 class = 'text-lg'>{app?.Role}, {app?.Company}</h3></svelte:fragment>
                                     <svelte:fragment slot="summary">
-                                        <p class = 'text-right'>Jan 3, 2024</p>
+                                        <p class = 'text-right'>{app?.Date.toDate().toLocaleDateString('en-us', {month:"short", day:"numeric", year:"numeric"})}</p>
                                     </svelte:fragment>
                                     <svelte:fragment slot="content">
                                         <div class="card p-4">
@@ -131,6 +134,23 @@
                                 </AccordionItem>
                             {/if}
                         {/each}
+                        <button class = 'flex m-auto mt-11 btn-md btn variant-filled-error' on:click = { async () => {
+                            // MODAL
+                            new Promise((resolve) => {
+                                const modal = {
+                                    type: 'confirm',
+                                    // Data
+                                    title: 'Please Confirm',
+                                    body: 'Are you sure you wish to remove this term and all applications associated?',
+                                    // TRUE if confirm pressed, FALSE if cancel pressed
+                                    response: (r) => resolve(r),
+                                };
+                                modalStore.trigger(modal);
+                            }).then(async (r) => {
+                                if (r) 
+                                    await dataHandlers.removeTerm(tabSet)
+                            })
+                        }} >Remove term </button>
                 </Accordion>
                 {/if}
             </svelte:fragment>

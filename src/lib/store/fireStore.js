@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { db } from '$lib/firebase/firebase.client'
-import { collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, query, where, deleteDoc, deleteField} from "firebase/firestore"; 
+import { Timestamp, collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, query, where, deleteDoc, deleteField} from "firebase/firestore"; 
 import { authStore } from './authStore';
 import { update } from "firebase/database";
 
@@ -19,17 +19,20 @@ export const dataHandlers = {
             Role : role,
             Term : term,
             Status : true, 
-            Interviews : {},
+            Interviews : new Map(),
             Location : "TBD", 
             Platform : "Unknown",
             Notes : "", 
-            Topics : []
+            Topics : [],
+            Id : "", 
+            Date : Timestamp.fromDate(new Date())
         }
         
         console.log("add app ")
         // UPDATE DB
         const route = 'users/' + User.email + '/applications'
         const docRef = await addDoc(collection(db, route), application)
+        application.Id = docRef.id
 
         // UPDATE LOCAL STORAGE 
         if (docRef) {
@@ -108,19 +111,17 @@ export const dataHandlers = {
         // UPDATE LOCAL STORAGE 
         if (docRef) {
             authStore.update((curr) => {
-                return {...curr, terms:[term, ...curr.terms]}
+                return {...curr, terms: [...curr.terms, term]}
             })
         }
     },
 
     // EDIT TERM 
     editTerm: async (oldTerm, newTerm) => {
-        // Update list of terms and every application with that term
-        const appRoute = 'users/' + User.email + '/applications'
-        const q = query(collection(db, appRoute), where("Term", "==", oldTerm));
-        const querySnapshot = await getDocs(q);
-
         // DB - Update every application 
+        const appRoute = 'users/' + User.email + '/applications'
+        const q = query(collection(db, appRoute), where("Term", "==", oldTerm))
+        const querySnapshot = await getDocs(q) 
         querySnapshot.forEach(async (app) => {
             const route = 'users/' + User.email + '/applications/' + app.id
             const docRef = doc(db, route)
@@ -133,7 +134,10 @@ export const dataHandlers = {
         const termRoute = 'users/' + User.email 
         const termRef = doc(db, termRoute)
         await updateDoc((termRef), {
-            "Terms" : arrayRemove(oldTerm)
+            "terms" : arrayRemove(oldTerm)
+        })
+        await updateDoc((termRef), {
+            "terms" : arrayUnion(newTerm)
         })
 
         // UPDATE LOCAL STORAGE 
@@ -143,14 +147,47 @@ export const dataHandlers = {
                     if (curr.apps.at(i).Term === oldTerm)
                         curr.apps.at(i).Term = newTerm
                 }
-                const indx = curr.terms.findIndex(oldTerm)
+                const indx = curr.terms.findIndex((t) => t === oldTerm)
+                if (indx > -1)
+                    curr.terms.splice(indx, 1, newTerm) 
+                return curr
+            })
+        }
+    },
+
+    // EDIT TERM 
+    removeTerm: async (term) => {
+        // DB - Update every application 
+        const appRoute = 'users/' + User.email + '/applications'
+        const q = query(collection(db, appRoute), where("Term", "==", term))
+        const querySnapshot = await getDocs(q)
+        querySnapshot.forEach(async (app) => {
+            const route = 'users/' + User.email + '/applications/' + app.id
+            const docRef = doc(db, route)
+            await deleteDoc(docRef)
+        })
+
+        // DB - Update list of terms
+        const termRoute = 'users/' + User.email
+        const termRef = doc(db, termRoute)
+        await updateDoc((termRef), {
+            "terms" : arrayRemove(term)
+        })
+
+        // UPDATE LOCAL STORAGE 
+        if (termRef) {
+            authStore.update((curr) => {
+                for (var i = 0; i < curr.apps.length; i++) {
+                    if (curr.apps.at(i).Term === term)
+                        curr.apps.splice(i, 1)
+                }
+                const indx = curr.terms.findIndex((element) => element === term)
                 if (indx > -1)
                     curr.terms.splice(indx, 1)
                 return curr
             })
         }
     },
-
     
      // ADD INTERVIEW  
      addInterview: async (id, interview) => {
@@ -213,8 +250,10 @@ export const dataHandlers = {
 
         if (value === "Pending")   
             updatedValue = "Advanced"
-        else if (value === "Advanced")
+        else if (value === "Advanced") {
             updatedValue = "Rejected"
+            dataHandlers.updateStatus(id, false)
+        }  
         else if (value === "Rejected")
             updatedValue = "Pending"
 

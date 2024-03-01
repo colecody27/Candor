@@ -17,7 +17,7 @@
 				// Applications
 				const appsRoute = 'users/' + User?.email + '/applications'
 				const querySnpsht = await getDocs(collection(db, appsRoute))
-				const tempApps = [{}]
+				const tempApps = []
 				
 				// Iterate through data
 				querySnpsht.forEach((doc) => {
