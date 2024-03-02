@@ -12,7 +12,7 @@
         background: 'variant-filled-success',
     };
     const fail: ToastSettings = {
-        message: 'Reqest failed!',
+        message: 'Unable to send request!',
         background: 'variant-filled-error',
     };
     
@@ -56,9 +56,31 @@
                     <!-- Deny -->
                     <button class='btn btn-md variant-filled-error' on:click = {() => dataHandlers.denyReq(req)}>Deny</button>
                 </div>
-               
             </div>
         {/each}
     </div>
-   
+</div>
+
+<!-- Friends -->
+<div class='flex flex-col space-y-3 mt-10 '>
+    <h2 class="h2 flex m-auto">Connections</h2>
+    <div class = 'mx-5 flex flex-row'>
+        {#each $authStore.friends as friend}
+            <!-- Avatar -->
+            <div class='card p-4 w-60 shadow-xl'>
+                <button class='flex m-auto'>
+                <!-- User info -->
+                <div class="flex flex-col items-center justify-center">
+                    <Avatar 
+                        initials={friend.name.split(" ")[0].charAt(0) + friend.name.split(" ")[1].charAt(0)}
+                        border="border-4 border-surface-300-600-token hover:!border-primary-500"
+                        cursor="cursor-pointer">	
+                    </Avatar>
+                    <p>{friend.name}</p>
+                    <p>{friend.email}</p>
+                </div>
+                </button>
+            </div>
+        {/each}
+    </div>
 </div>

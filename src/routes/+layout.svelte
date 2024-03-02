@@ -39,7 +39,7 @@
 			
 				// Update store
 				authStore.update((curr) => {
-					return {...curr, isLoading:false, currentUser:true, user:User, apps:tempApps, terms:userSnpsht.data()?.terms, rcvdReqs : userSnpsht.data()?.rcvdReqs}
+					return {...curr, isLoading:false, currentUser:true, user:User, apps:tempApps, terms:userSnpsht.data()?.terms, rcvdReqs : userSnpsht.data()?.rcvdReqs, friends:userSnpsht.data()?.friends}
 				})
 			}
 		})

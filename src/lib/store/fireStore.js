@@ -7,9 +7,11 @@ import { update } from "firebase/database";
 /** @type {import("@firebase/auth").User} */
 let User
 let univ 
+let friends
 authStore.subscribe((curr) => {
     User = curr?.user
     univ = curr?.university
+    friends = curr?.friends
 })
 
 export const dataHandlers = {
@@ -336,6 +338,12 @@ export const dataHandlers = {
         if (!recSnap.exists())
             return false
 
+        // Confirm that user is not already a friend
+        for (var i = 0; i < friends.length; i++) {
+            if (friends[i].email.localeCompare(email) === 0 || email.localeCompare(User.email) === 0)
+                return false
+        }
+
         // Get user information
         const recUser = {
             "email" : email,
@@ -408,6 +416,38 @@ export const dataHandlers = {
         return true
     },
 
+    // ACCEPT REQUEST
+    denyReq: async (req) => {
+        // Sender 
+        const senderRef = doc(db, `users/${req.email}`)
+
+        // Receiver
+        const recRoute = 'users/' + User.email
+        const recRef = doc(db, recRoute)
+        const recUser = {
+            "email" : User.email, 
+            "name" : User.displayName,
+            "university" : univ
+        }
+        
+        // Move each user from recv/sent to the friends list - Receiver
+        await updateDoc(recRef, {
+            rcvdReqs : arrayRemove(req), 
+        });
+        // Move each user from recv/sent to the friends list - Sender
+        await updateDoc(senderRef, {
+            sentReqs : arrayRemove(recUser), 
+        });
+
+        // UPDATE LOCAL STORAGE 
+        authStore.update((curr) => {
+            // Remove request 
+            const indx = curr.rcvdReqs.findIndex((r) => r.email === req.email)
+            curr.rcvdReqs.splice(indx, 1)
+            return curr
+        })
+        return true
+    },
 
 
 }
