@@ -1,8 +1,7 @@
 <script>
     import { authStore } from "$lib/store/authStore";
 
-    let stats 
-    let getAdvancements = () => {
+    const getAdvancements = () => {
         let count = 0
             for (var i = 0; i < $authStore?.apps.length; i++) {
                 const app = $authStore.apps.at(i)
@@ -13,7 +12,7 @@
             }
         return count
     }
-    let getDayStreak = () => {
+    const getDayStreak = () => {
         let streak = 0
         const today = new Date()
 
@@ -35,7 +34,7 @@
         return streak 
     }
 
-    stats = [["Total Applications", $authStore.apps.length], ["Total Advancements", getAdvancements()], ["Day Streak", getDayStreak()], ["Connections", "8"]]
+    $: stats = [["Total Applications", $authStore.apps.length], ["Total Advancements", getAdvancements()], ["Day Streak", getDayStreak()], ["Connections", "8"]]
 </script>
 
 <div class=" m-auto snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-10 w-1/4 ">

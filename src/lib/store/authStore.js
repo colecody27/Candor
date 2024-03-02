@@ -13,7 +13,11 @@ export const authStore = writable({
     currentUser : false,
     user : null,
     terms : [],
-    apps : []
+    apps : [], 
+    friends : [],
+    rcvdReqs : [], 
+    sentReqs : [],
+    university : ""
 })
     
 // Object to handle login and logout functions
@@ -35,7 +39,10 @@ export const authHandlers = {
                         name : User.displayName, 
                         email : User.email,
                         university : "",
-                        terms : ["No term"]
+                        terms : ["No term"],
+                        friends : [],
+                        rcvdReqs : [], 
+                        sentReqs : []
                     }) 
                 }
             }            

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { initializeStores, Modal } from '@skeletonlabs/skeleton';
+	import { initializeStores, Modal, Toast } from '@skeletonlabs/skeleton';
 	import '../app.postcss';
 	import {onMount} from 'svelte'
 	import auth from '$lib/firebase/firebase.client'
@@ -7,7 +7,7 @@
 	import { collection, addDoc, doc, setDoc, getDoc, getDocs } from "firebase/firestore"; 
 	import { db } from '$lib/firebase/firebase.client'
 
-	// Initialization for modal
+	// Initialization for modal	
 	initializeStores();
 
 	onMount(() => {	
@@ -39,7 +39,7 @@
 			
 				// Update store
 				authStore.update((curr) => {
-					return {...curr, isLoading:false, currentUser:true, user:User, apps:tempApps, terms:userSnpsht.data()?.terms}
+					return {...curr, isLoading:false, currentUser:true, user:User, apps:tempApps, terms:userSnpsht.data()?.terms, rcvdReqs : userSnpsht.data()?.rcvdReqs}
 				})
 			}
 		})
@@ -49,4 +49,5 @@
 </script>
 
 <Modal />
+<Toast />
 <slot/>

@@ -4,7 +4,7 @@
     import Overviewstats from '../../../components/overviewstats.svelte';
     import { authStore } from '$lib/store/authStore';
 
-    const recentApps = $authStore.apps.slice(0, 10)
+    $: recentApps = $authStore.apps.slice(0, 10)
 
 </script>
 

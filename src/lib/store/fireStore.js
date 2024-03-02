@@ -6,8 +6,10 @@ import { update } from "firebase/database";
 
 /** @type {import("@firebase/auth").User} */
 let User
+let univ 
 authStore.subscribe((curr) => {
     User = curr?.user
+    univ = curr?.university
 })
 
 export const dataHandlers = {
@@ -19,7 +21,7 @@ export const dataHandlers = {
             Role : role,
             Term : term,
             Status : true, 
-            Interviews : new Map(),
+            Interviews : [],
             Location : "TBD", 
             Platform : "Unknown",
             Notes : "", 
@@ -82,7 +84,7 @@ export const dataHandlers = {
         // UPDATE LOCAL STORAGE 
         authStore.update((curr) => {
             const indx = curr.apps.findIndex((app) => app.Id === id)
-            curr.apps.splice(indx, indx)
+            curr.apps.splice(indx, 1)
             return curr
         })
     },
@@ -325,5 +327,88 @@ export const dataHandlers = {
             })
         }
     },
+
+    // SEND REQUEST
+    sendReq: async (email) => {
+        // Confirm user exists
+        const recRef = doc(db, `users/${email}`)
+        const recSnap = await getDoc(recRef)
+        if (!recSnap.exists())
+            return false
+
+        // Get user information
+        const recUser = {
+            "email" : email,
+            "name" : recSnap.data().name,
+            "university" : recSnap.data().university
+        }
+        const sendUser = {
+            "email" : User.email, 
+            "name" : User.displayName,
+            "university" : univ
+        }
+
+        // Update sender's list of sent request 
+        const senderRoute = 'users/' + User.email
+        const senderRef = doc(db, senderRoute)
+
+        // Update sender's list of sent request 
+        await updateDoc(senderRef, {
+            sentReqs : arrayUnion(recUser)
+        });
+
+        // Update recepients list of received request
+        await updateDoc(recRef, {
+            "rcvdReqs" : arrayUnion(sendUser)
+        });
+
+        // UPDATE LOCAL STORAGE 
+        authStore.update((curr) => {
+            curr.sentReqs.push(recUser)
+            return curr
+        })
+        return true
+    },
+
+     // ACCEPT REQUEST
+     acceptReq: async (req) => {
+        // Sender 
+        const senderRef = doc(db, `users/${req.email}`)
+
+        // Receiver
+        const recRoute = 'users/' + User.email
+        const recRef = doc(db, recRoute)
+        const recUser = {
+            "email" : User.email, 
+            "name" : User.displayName,
+            "university" : univ
+        }
+        
+        // Move each user from recv/sent to the friends list - Receiver
+        await updateDoc(recRef, {
+            rcvdReqs : arrayRemove(req), 
+            friends : arrayUnion(req)
+        });
+        // Move each user from recv/sent to the friends list - Sender
+        await updateDoc(senderRef, {
+            sentReqs : arrayRemove(recUser), 
+            friends : arrayUnion(recUser)
+        });
+
+        // UPDATE LOCAL STORAGE 
+        authStore.update((curr) => {
+            // Remove request 
+            const indx = curr.rcvdReqs.findIndex((r) => r.email === req.email)
+            curr.rcvdReqs.splice(indx, 1)
+
+            // Add friend 
+            curr.friends.push(req)
+            return curr
+        })
+        return true
+    },
+
+
+
 }
 
