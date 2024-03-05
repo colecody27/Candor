@@ -17,7 +17,8 @@ export const authStore = writable({
     friends : [],
     rcvdReqs : [], 
     sentReqs : [],
-    university : ""
+    university : "",
+    friend : {}
 })
     
 // Object to handle login and logout functions
@@ -42,7 +43,8 @@ export const authHandlers = {
                         terms : ["No term"],
                         friends : [],
                         rcvdReqs : [], 
-                        sentReqs : []
+                        sentReqs : [],
+                        friend : {}
                     }) 
                 }
             }            

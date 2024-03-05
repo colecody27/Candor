@@ -4,6 +4,7 @@ import { Timestamp, collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc,
 import { authStore } from './authStore';
 import { update } from "firebase/database";
 
+
 /** @type {import("@firebase/auth").User} */
 let User
 let univ 
@@ -449,6 +450,45 @@ export const dataHandlers = {
         return true
     },
 
+    getFriend: async(friend) => {
+        // Get applications, terms, and friends from DB
+        const appRoute = `users/${friend.email}/applications`
+        const friendRef = doc(db, `users/${friend.email}`)
+        const friendDoc = await getDoc(friendRef)
+        console.log("Friend: " + friendDoc.data().name)
+        const querySnpsht = await getDocs(collection(db, appRoute))
+        const tempApps = []
+        
+        // Iterate through data
+        querySnpsht.forEach((doc) => {
+            // Get data 
+            let docData = doc.data()
 
+            // Add reference to get doc from DB
+            docData.Id = doc.id
+
+            // Convert interview data to array of values
+            docData.Interviews = Object.entries(docData.Interviews)
+
+            console.log("App: " + docData)
+            tempApps.push(docData)
+        })
+
+        // Update DB 
+        const userDoc = doc(db, `users/${User.email}`)
+        await updateDoc(userDoc, {
+            "friend.email" : friend.email, 
+            "friend.name" : friend.name, 
+            "friend.apps" : tempApps
+        })
+
+        // Update local store 
+        authStore.update((curr) => {
+            curr.friend.email = friend.email
+            curr.friend.name = friend.name
+            curr.friend.apps = tempApps
+            return curr
+        })
+    }
 }
 

@@ -68,7 +68,10 @@
         {#each $authStore.friends as friend}
             <!-- Avatar -->
             <div class='card p-4 w-60 shadow-xl'>
-                <button class='flex m-auto'>
+                <button on:click={async()=> {
+                    await dataHandlers.getFriend(friend)
+                    window.location.href = '/user/friend' 
+                }} class='flex m-auto'>
                 <!-- User info -->
                 <div class="flex flex-col items-center justify-center">
                     <Avatar 

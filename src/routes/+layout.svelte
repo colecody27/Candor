@@ -18,7 +18,7 @@
 				const appsRoute = 'users/' + User?.email + '/applications'
 				const querySnpsht = await getDocs(collection(db, appsRoute))
 				const tempApps = []
-				
+
 				// Iterate through data
 				querySnpsht.forEach((doc) => {
 					// Get data 
@@ -36,10 +36,11 @@
 				// Terms
 				const userRef = doc(db, 'users', User.email)
 				const userSnpsht = await getDoc(userRef)
-			
+
 				// Update store
 				authStore.update((curr) => {
-					return {...curr, isLoading:false, currentUser:true, user:User, apps:tempApps, terms:userSnpsht.data()?.terms, rcvdReqs : userSnpsht.data()?.rcvdReqs, friends:userSnpsht.data()?.friends}
+					return {...curr, isLoading:false, currentUser:true, user:User, apps:tempApps, terms:userSnpsht.data()?.terms, 
+						rcvdReqs : userSnpsht.data()?.rcvdReqs, friends:userSnpsht.data()?.friends, friend:userSnpsht.data()?.friend}
 				})
 			}
 		})

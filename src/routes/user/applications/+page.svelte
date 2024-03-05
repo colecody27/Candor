@@ -157,5 +157,4 @@
         </TabGroup>
         {/if}
     </div>
-    
 </div>
