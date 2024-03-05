@@ -479,7 +479,8 @@ export const dataHandlers = {
         await updateDoc(userDoc, {
             "friend.email" : friend.email, 
             "friend.name" : friend.name, 
-            "friend.apps" : tempApps
+            "friend.apps" : tempApps,
+            "friend.terms" : friendDoc.data().terms
         })
 
         // Update local store 
@@ -487,6 +488,7 @@ export const dataHandlers = {
             curr.friend.email = friend.email
             curr.friend.name = friend.name
             curr.friend.apps = tempApps
+            curr.friend.terms = friendDoc.data().terms
             return curr
         })
     }
