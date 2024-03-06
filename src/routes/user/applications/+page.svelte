@@ -74,10 +74,10 @@
                                     await dataHandlers.editTerm(term, r)
                                     tabSet = r
                                 }
-                                    
                             })
                         }} 
-                        class = 'btn-icon h-4  w-4 '><img class = 'm-auto' src={editIcon} alt=""></button>
+                        class = 'btn-icon h-4  w-4 '><img class = 'm-auto' src={editIcon} alt="">
+                        </button>
                     </svelte:fragment>
                     <span>{$authStore.apps.filter((app) => app.Term === term).length} apps</span>
                 </Tab>

@@ -467,9 +467,6 @@ export const dataHandlers = {
             // Add reference to get doc from DB
             docData.Id = doc.id
 
-            // Convert interview data to array of values
-            docData.Interviews = Object.entries(docData.Interviews)
-
             console.log("App: " + docData)
             tempApps.push(docData)
         })

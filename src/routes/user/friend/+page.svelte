@@ -2,14 +2,15 @@
 	import { dataHandlers } from "$lib/store/fireStore";
     import {authStore} from '$lib/store/authStore'
     import { Avatar, TabGroup, Tab, Accordion, AccordionItem} from "@skeletonlabs/skeleton";
-	import Appdropdown from "../../../components/appdropdown.svelte";
+	import Appdropdown_view from "../../../components/appdropdown_view.svelte";
 
     console.log($authStore?.friend)
     $: name = $authStore?.friend.name
     $: email = $authStore?.friend.email
     $: apps = $authStore?.friend.apps
     $: terms = $authStore?.friend.terms
-    $: tabSet = terms[0]
+    let tabSet = $authStore?.terms[0]
+    $: console.log(typeof apps[0].Interviews)
 </script>
 
 <div>
@@ -59,7 +60,7 @@
                                     </svelte:fragment>
                                     <svelte:fragment slot="content">
                                         <div class="card p-4">
-                                            <Appdropdown app={app}/>
+                                            <Appdropdown_view app={app}/>
                                         </div>
                                     </svelte:fragment>
                                 </AccordionItem>
