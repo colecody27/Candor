@@ -1,10 +1,10 @@
 <script>
-    import { authStore } from "$lib/store/authStore";
+    export let apps
 
     const getAdvancements = () => {
         let count = 0
-            for (var i = 0; i < $authStore?.apps.length; i++) {
-                const app = $authStore.apps.at(i)
+            for (var i = 0; i < apps.length; i++) {
+                const app = apps.at(i)
                 for (var j = 0; j < app.Interviews.length; j++) {
                     if (app.Interviews.at(j)[1] === "Advanced")
                         count++
@@ -16,11 +16,11 @@
         let streak = 0
         const today = new Date()
 
-        for (var i = 0; i < $authStore.apps.length -1; i++) {
-            if (i == 0 && today.getDay() - $authStore.apps.at(0).Date.toDate().getDay() < 1)
+        for (var i = 0; i < apps.length -1; i++) {
+            if (i == 0 && today.getDay() - apps.at(0).Date.toDate().getDay() < 1)
                 streak++
-            const app1 = $authStore.apps.at(i)
-            const app2 = $authStore.apps.at(i+1)
+            const app1 = apps.at(i)
+            const app2 = apps.at(i+1)
             if (app1.Date.toDate().getYear() === app2.Date.toDate().getYear() && app1.Date.toDate().getMonth() === app2.Date.toDate().getMonth()) {
                 const dateDiff = app2.Date.toDate().getDay() - app1.Date.toDate().getDay()
                 if (dateDiff < 1)
@@ -34,7 +34,7 @@
         return streak 
     }
 
-    $: stats = [["Total Applications", $authStore.apps.length], ["Total Advancements", getAdvancements()], ["Day Streak", getDayStreak()], ["Connections", "8"]]
+    $: stats = [["Total Applications", apps.length], ["Total Advancements", getAdvancements()], ["Day Streak", getDayStreak()], ["Connections", "8"]]
 </script>
 
 <div class=" m-auto snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-10 w-1/4 ">

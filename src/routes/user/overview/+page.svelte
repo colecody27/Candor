@@ -10,7 +10,7 @@
 
 <!-- Overview Stats -->
 <div class="mt-20">
-    <Overviewstats/>
+    <Overviewstats apps={$authStore.apps}/>
 </div>
 
 

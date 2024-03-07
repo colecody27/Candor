@@ -14,9 +14,9 @@
         <div>
             <h3 class = 'inline-block text-2xl' >Status: </h3>
             {#if app.Status}
-                <button class = 'variant-filled inline-block btn btn-sm'> Submitted</button>
+                <span class='badge variant-filled inline-block '>Submitted</span>
             {:else}
-                <button class = 'variant-filled-error inline-block btn btn-sm'> Rejected</button>
+                <span class='badge variant-filled-error inline-block '>Rejected</span>
             {/if}
         </div>
     </div>
@@ -30,11 +30,11 @@
                     <li class = 'ml-4 mt-2'> 
                         <h2 class = 'inline-block'>{key}:</h2>
                         {#if value === "Rejected"}
-                            <button class = 'variant-filled-error inline-block btn btn-sm'>{value}</button>    
+                            <span class='badge variant-filled-error inline-block '>{value}</span>
                         {:else if value === "Pending"}
-                            <button class = 'variant-filled-secondary inline-block btn btn-sm'>{value}</button>    
+                            <span class='badge variant-filled-secondary inline-block '>{value}</span>       
                         {:else}
-                            <button class = 'variant-filled inline-block btn btn-sm'>{value}</button>
+                            <span class='badge variant-filled inline-block '>{value}</span>
                         {/if}
                     </li>
                 {/each}
@@ -46,12 +46,14 @@
     <div class = 'mt-4 flex flex-col'>
         <h3 class = 'text-2xl'>Online Assessment:</h3>
         <h2 class = 'ml-4 mt-2 inline-block'>Platform: </h2> 
-        <button class = 'variant-filled inline-block btn btn-sm'> {app.Platform}</button>
+        <span class='badge variant-filled inline-block w-fit'>{app.Platform}</span>
         
         <h2 class = 'ml-4 mt-2 inline-block'>Topics: </h2> 
+        <div class='flex flex-row'>
         {#each app.Topics as topic} 
-            <button class = 'variant-filled inline-block btn btn-sm'> {topic}</button>
+            <span class='badge variant-filled inline-block w-fit mr-1'>{topic}</span>
         {/each}
+        </div>
 
     </div>
 
