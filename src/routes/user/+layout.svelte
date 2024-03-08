@@ -64,7 +64,7 @@
 			
 			<svelte:fragment slot="trail">
 				<div class="card p-4 w-40 shadow-xl" data-popup="popupFeatured">
-					<a class = 'block text-center'href="settings">Profile</a>
+					<a class = 'block text-center'href="profile">Profile</a>
 					<button type = 'button' on:click ={handleLogout} class = 'variant-filled btn-md rounded-md block m-auto'>Logout</button>
 					<!--<div class="arrow bg-surface-100-800-token" /> -->
 				</div>

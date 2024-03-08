@@ -17,7 +17,7 @@ export default {
 			themes: {
 				preset: [
 					{
-						name: 'seafoam',
+						name: 'rocket',
 						enhancements: true,
 					},
 				],

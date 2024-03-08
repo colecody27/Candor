@@ -14,21 +14,21 @@
     let tabSet = $authStore?.terms[0]
 </script>
 
-<div class='flex flex-row m-10'>
-    <div>
+<div class='flex flex-row m-10 '>
     <!-- Avatar -->
-        <div class='card p-4 w-60 h-40 shadow-xl'>
-            <div class="flex flex-col items-center justify-center">
-                <Avatar 
-                    initials={name.split(" ")[0].charAt(0) + name.split(" ")[1].charAt(0)}
-                    border="border-4 border-surface-300-600-token hover:!border-primary-500"
-                    cursor="cursor-pointer">	
-                </Avatar>
-                <p>{name}</p>
-                <p>{apps.length} applications</p>
-            </div>
+    <div class='card p-4 w-60 flex flex-col size-fit shadow-xl'>
+        <div class="flex flex-col items-center justify-center">
+            <Avatar 
+                initials={name.split(" ")[0].charAt(0) + name.split(" ")[1].charAt(0)}
+                border="border-4 border-surface-300-600-token hover:!border-primary-500"
+                cursor="cursor-pointer">	
+            </Avatar>
+            <p>{name}</p>
+            <p>{apps.length} applications</p>
         </div>
-        <Activity apps={apps}/>
+        <div class='mt-2'>
+            <Activity apps={apps}/>
+        </div>
     </div>
     <!-- Graph -->
     <div>
