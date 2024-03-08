@@ -18,15 +18,12 @@
         d.setDate((j))
         dates.push(d)
     }
-    console.log(dates)
 
     while (day > 0 && appIndx < apps.length ) {
         let app = apps.at(appIndx)
         let appDate = app.Date.toDate()
-        console.log(appDate)
         // If application date is outside of 7 day window, break
         if ( Math.round((currDate.getTime() - appDate.getTime())/(1000 * 3600 * 24)) > 7 ) {
-            console.log("broke")
             break
         }
             
