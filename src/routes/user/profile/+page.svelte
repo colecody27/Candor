@@ -114,7 +114,7 @@
                     modalStore.trigger(modal);
                 }).then(async (r) => {
                     if (r)
-                        await dataHandlers.deleteAccount($authStore.user.email)})
+                        await dataHandlers.deleteAccount()})
                 }}
             class ='btn-md btn variant-filled-error flex m-auto '>Delete Account</button>
         </div>

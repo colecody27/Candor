@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 import { db } from '$lib/firebase/firebase.client'
 import { Timestamp, collection, addDoc, doc, setDoc, getDoc, getDocs, updateDoc, arrayUnion, arrayRemove, query, where, deleteDoc, deleteField} from "firebase/firestore"; 
+import { getAuth, deleteUser } from "firebase/auth";
 import { authStore } from './authStore';
 import { update } from "firebase/database";
 
@@ -488,6 +489,34 @@ export const dataHandlers = {
             curr.friend.terms = friendDoc.data().terms
             return curr
         })
-    }
+    },
+
+    deleteAccount: async () => {
+        // Iterate through friend's emails and remove the current user from their friend's list
+        for (let i = 0; i < friends.length; i++) {
+            const friendRef = doc(db, `users/${friends.at(i).email}`)
+
+            await updateDoc(friendRef, {
+                "friends" : arrayRemove({"name":User.displayName, "email":User.email, "university":univ})
+            })
+        }
+
+        // Delete current user's document
+        const userDoc = doc(db, `users/${User.email}`)
+        await deleteDoc(userDoc)
+
+        // Remove user from authentication system
+        const auth = getAuth()
+        const user = auth.currentUser
+        deleteUser(user).then(() => {
+            // User deleted.
+            console.log("User deleted")
+          }).catch((error) => {
+            // An error ocurred
+          });
+
+        // Redirect to landing page
+        window.location.href = '/' 
+    }   
 }
 
