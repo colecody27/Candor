@@ -477,7 +477,7 @@ export const dataHandlers = {
 		const userDoc = doc(db, `users/${User.email}`);
 		await updateDoc(userDoc, {
 			'friend.email': friend.email,
-			'friend.name': friend.name,
+			'friend.name': friendDoc.data().name,
 			'friend.apps': tempApps,
 			'friend.terms': friendDoc.data().terms
 		});
@@ -485,7 +485,7 @@ export const dataHandlers = {
 		// Update local store
 		authStore.update((curr) => {
 			curr.friend.email = friend.email;
-			curr.friend.name = friend.name;
+			curr.friend.name = friendDoc.data().name;
 			curr.friend.apps = tempApps;
 			curr.friend.terms = friendDoc.data().terms;
 			return curr;
@@ -527,15 +527,16 @@ export const dataHandlers = {
 		const userDoc = doc(db, `users/${User.email}`);
         const docSnap = await getDoc(userDoc); 
 		const userData = docSnap.data(); 
-		let resumeName = req.resume.name.slice(0, req.resume.name.indexOf(".")); 
+		
 
 		// Update name
-		if (req.name != undefined) {
+		if (req.name != undefined && req.name.charAt(0) != ' ') {
 			await updateDoc(userDoc, {
 				name: req.name
 			});
 			authStore.update((curr) => {
-				curr.user.name = req.name
+				curr.name = req.name
+				console.log(curr.user)
 				return curr;
 			});
 		}
@@ -553,6 +554,7 @@ export const dataHandlers = {
 
 		// Upload resume and set as default
         if (req.resume != undefined) {
+			let resumeName = req.resume.name.slice(0, req.resume.name.indexOf(".")); 
             const storageRef = ref(storage, `users/${User.email}/${req.resume.name}`)
 			// Verify resume name is unique
 			if (resumeName in userData?.resumes)

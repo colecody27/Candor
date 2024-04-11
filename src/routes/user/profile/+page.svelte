@@ -11,8 +11,10 @@
 
 	const modalStore = getModalStore();
 
-	$: name = $authStore?.user?.displayName;
+	$: name = $authStore?.name;
 	$: univ = $authStore?.university;
+	$: resumes = $authStore?.resumes; 
+	let inputName, inputUniv;
 
 	let image: FileList;
 	let resumeFile;  
@@ -28,11 +30,20 @@
 	<div class="card p-4 w-60 flex flex-col size-fit shadow-xl m-5">
 		<div class="flex flex-col items-center justify-center">
 			<div class="relative">
-				<Avatar
-					initials={name.split(' ')[0].charAt(0) + name.split(' ')[1].charAt(0)}
-					border="border-4 border-surface-300-600-token hover:!border-primary-500"
-					cursor="cursor-pointer"
-				></Avatar>
+				{#if (name.split(' ').length < 2) }
+							<Avatar
+								initials={name.split(' ')[0].charAt(0)}
+								border="border-4 border-surface-300-600-token hover:!border-primary-500"
+								cursor="cursor-pointer"
+							></Avatar>
+						{:else}
+							<Avatar
+								initials={name.split(' ')[0].charAt(0) +
+								name.split(' ')[1].charAt(0)}
+								border="border-4 border-surface-300-600-token hover:!border-primary-500"
+								cursor="cursor-pointer"
+							></Avatar>
+						{/if}
 				<button class="absolute top-0 right-0">
 					<img class="h-4 w-4" src={trashIcon} alt="" />
 				</button>
@@ -71,11 +82,11 @@
 			<div class="grid grid-cols-2 mt-5">
 				<div class="grid mr-5">
 					<h4 class="h4">Name</h4>
-					<input class="input max-w-sm" title="Name" type="text" placeholder={name} />
+					<input class="input max-w-sm" title="Name" type="text" placeholder={name} bind:value={inputName}/>
 				</div>
 				<div class="grid">
 					<h4 class="h4">University</h4>
-					<input class="input max-w-sm" title="University" type="text" placeholder={univ} />
+					<input class="input max-w-sm" title="University" type="text"  placeholder={univ} bind:value={inputUniv}/>
 				</div>
 			</div>
 
@@ -84,12 +95,14 @@
 			<input class="input" type="file" accept="application/pdf" bind:files={resumeFile} />
 
 			<dl class="list-dl mt-5">
+				<!-- resumes: [resume, {name, university, count}]-->
+				{#each Object.entries(resumes) as resume }
 				<div>
 					<!-- <span class="badge bg-primary-500">💀</span> -->
 					<img class="h-4 w-4" src={paper} alt="" />
 					<span class="flex-auto">
-						<dt>Resume 1</dt>
-						<dd>24 applications</dd>
+						<a class='underline' href={resume[1].url}>{resume[0]}</a>
+						<dd>{resume[1].count} applications</dd>
 					</span>
 					<button
 						class="btn-icon h-5 w-5 variant-filled-error"
@@ -98,20 +111,7 @@
 						}}><img class="h-4 w-4 m-auto" src={xIcon} alt="" /></button
 					>
 				</div>
-				<div>
-					<!-- <span class="badge bg-primary-500">💀</span> -->
-					<img class="h-4 w-4" src={paper} alt="" />
-					<span class="flex-auto">
-						<dt>Resume 2</dt>
-						<dd>53 applications</dd>
-					</span>
-					<button
-						class="btn-icon h-5 w-5 variant-filled-error"
-						on:click={() => {
-							dataHandlers.removeResume(app.Id, key);
-						}}><img class="h-4 w-4 m-auto" src={xIcon} alt="" /></button
-					>
-				</div>
+				{/each}
 			</dl>
 		</div>
 		<div class="flex justify-center justify-between">
@@ -119,7 +119,10 @@
 			<button
 				class="btn btn-md variant-filled-success m-auto mt-5"
 				on:click={() => {
-					dataHandlers.updateAccount({ name: name, university: univ, resume:resumeFile[0]});
+					if (resumeFile != undefined)
+						dataHandlers.updateAccount({ name: inputName, university: inputUniv, resume:resumeFile[0]});
+					else
+						dataHandlers.updateAccount({ name: inputName, university: inputUniv, resume:undefined});
 				}}>Update Profile</button
 			>
 			<!-- Delete Profile -->

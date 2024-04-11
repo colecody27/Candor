@@ -38,11 +38,12 @@
 
 	/** @type {import("@firebase/auth").User} */
 	export let User;
+	let name; 
 	// let email:string
 
 	authStore.subscribe((curr) => {
 		User = curr?.user;
-		// email = curr?.user?.displayName
+		name = curr?.name; 
 	});
 
 	onMount(() => {
@@ -83,15 +84,23 @@
 					</div>
 					<button use:popup={popupClick} class="">
 						<!--Avatar-->
-						<Avatar
-							initials={User.displayName.split(' ')[0].charAt(0) +
-								User.displayName.split(' ')[1].charAt(0)}
-							border="border-4 border-surface-300-600-token hover:!border-primary-500"
-							cursor="cursor-pointer"
-						></Avatar>
+						{#if (name.split(' ').length < 2) }
+							<Avatar
+								initials={name.split(' ')[0].charAt(0)}
+								border="border-4 border-surface-300-600-token hover:!border-primary-500"
+								cursor="cursor-pointer"
+							></Avatar>
+						{:else}
+							<Avatar
+								initials={name.split(' ')[0].charAt(0) +
+								name.split(' ')[1].charAt(0)}
+								border="border-4 border-surface-300-600-token hover:!border-primary-500"
+								cursor="cursor-pointer"
+							></Avatar>
+						{/if}
 						<!-- -->
 						<!--Username-->
-						<h1 class="mr-2">{User.displayName}</h1>
+						<h1 class="mr-2">{name}</h1>
 					</button>
 				</svelte:fragment>
 			</AppBar>

@@ -18,6 +18,7 @@ export const authStore = writable({
 	isLoading: true,
 	currentUser: false,
 	user: null,
+	name: null,
 	terms: [],
 	apps: [],
 	friends: [],

@@ -45,10 +45,14 @@
 						currentUser: true,
 						user: User,
 						apps: tempApps,
+						name: userSnpsht.data()?.name,
+						university: userSnpsht.data()?.university,
 						terms: userSnpsht.data()?.terms,
 						rcvdReqs: userSnpsht.data()?.rcvdReqs,
 						friends: userSnpsht.data()?.friends,
-						friend: userSnpsht.data()?.friend
+						friend: userSnpsht.data()?.friend, 
+						resumes: userSnpsht.data()?.resumes, 
+						resume: userSnpsht.data()?.resume, 
 					};
 				});
 			}
