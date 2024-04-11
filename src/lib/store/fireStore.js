@@ -19,7 +19,7 @@ import {
 import { getAuth, deleteUser } from 'firebase/auth';
 import { authStore } from './authStore';
 import { update } from 'firebase/database';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 /** @type {import("@firebase/auth").User} */
 let User;
@@ -525,12 +525,18 @@ export const dataHandlers = {
 	updateAccount: async (req) => {
 		// Request will contain name, university, resume file
 		const userDoc = doc(db, `users/${User.email}`);
-        
+        const docSnap = await getDoc(userDoc); 
+		const userData = docSnap.data(); 
+		let resumeName = req.resume.name.slice(0, req.resume.name.indexOf(".")); 
 
 		// Update name
 		if (req.name != undefined) {
 			await updateDoc(userDoc, {
 				name: req.name
+			});
+			authStore.update((curr) => {
+				curr.user.name = req.name
+				return curr;
 			});
 		}
 
@@ -539,13 +545,40 @@ export const dataHandlers = {
 			await updateDoc(userDoc, {
 				university: req.university
 			});
+			authStore.update((curr) => {
+				curr.university = req.university
+				return curr;
+			});
 		}
 
 		// Upload resume and set as default
         if (req.resume != undefined) {
             const storageRef = ref(storage, `users/${User.email}/${req.resume.name}`)
-            await uploadBytes(storageRef, req.resume);
-            
+			// Verify resume name is unique
+			if (resumeName in userData?.resumes)
+				return false;
+			
+			// Upload resume 
+			await uploadBytes(storageRef, req.resume);
+			const url = await getDownloadURL(storageRef);
+
+			// Add resume to list of resumes
+			await updateDoc(userDoc, {
+				[`resumes.${resumeName}`]: {name:req.resume.name, url:url, count:0}
+			});
+			authStore.update((curr) => {
+				curr.resume = {name:req.resume.name, url:url, count:0}
+				return curr;
+			});
+
+			// Update user's default resume
+			await updateDoc(userDoc, {
+				resume: {name:resumeName, url:url, count:0}
+			});
+			authStore.update((curr) => {
+				curr.resumes[`${resumeName}`] = {name:req.resume.name, url:url, count:0}
+				return curr;
+			});
         }
         
 
