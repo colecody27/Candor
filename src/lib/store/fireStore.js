@@ -14,7 +14,8 @@ import {
 	query,
 	where,
 	deleteDoc,
-	deleteField
+	deleteField,
+	increment
 } from 'firebase/firestore';
 import { getAuth, deleteUser } from 'firebase/auth';
 import { authStore } from './authStore';
@@ -25,11 +26,15 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 let User;
 let univ;
 let friends;
+let defaultResume;
+let userInfo; 
 const storage = getStorage();
 authStore.subscribe((curr) => {
 	User = curr?.user;
 	univ = curr?.university;
 	friends = curr?.friends;
+	defaultResume = curr?.resume; 
+	userInfo = curr;
 });
 
 export const dataHandlers = {
@@ -47,6 +52,7 @@ export const dataHandlers = {
 			Notes: '',
 			Topics: [],
 			Id: '',
+			resume: defaultResume,
 			Date: Timestamp.fromDate(new Date())
 		};
 
@@ -55,6 +61,11 @@ export const dataHandlers = {
 		const route = 'users/' + User.email + '/applications';
 		const docRef = await addDoc(collection(db, route), application);
 		application.Id = docRef.id;
+
+		// Increment resume count
+		if (defaultResume.name != '') {
+			await dataHandlers.updateResumeCount(defaultResume.name, "increment");
+		}
 
 		// UPDATE LOCAL STORAGE
 		if (docRef) {
@@ -100,6 +111,14 @@ export const dataHandlers = {
 		// UPDATE DB
 		const route = 'users/' + User.email + '/applications/' + id;
 		await deleteDoc(doc(db, route));
+
+		// Increment resume count
+		if (defaultResume.name != '') {
+			console.log(userInfo)
+			let resumeName = userInfo.apps.find((app) => app.Id === id).resume.name; 
+			console.log("resume name:" + resumeName)
+			await dataHandlers.updateResumeCount(resumeName, "decrement");
+		}
 
 		// UPDATE LOCAL STORAGE
 		authStore.update((curr) => {
@@ -582,7 +601,33 @@ export const dataHandlers = {
 				return curr;
 			});
         }
-        
+	},
 
+	updateResumeCount: async (resumeName, command) => {
+		if (resumeName == undefined)
+			return;
+		
+		const userDoc = doc(db, `users/${User.email}`);
+		// Update document with this name
+		switch(command) {
+			case "increment":
+				await updateDoc(userDoc, {
+					[`resumes.${resumeName}.count`]: increment(1)
+				});
+				authStore.update((curr) => {
+					curr.resumes[defaultResume.name].count = curr.resumes[defaultResume.name].count+1
+					return curr;
+				});
+				break;
+			case "decrement":
+				await updateDoc(userDoc, {
+					[`resumes.${resumeName}.count`]: increment(-1)
+				});
+				authStore.update((curr) => {
+					curr.resumes[resumeName].count = curr.resumes[resumeName].count-1
+					return curr;
+				});
+				break;
+		}
 	}
 };

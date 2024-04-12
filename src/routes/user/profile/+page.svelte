@@ -14,6 +14,7 @@
 	$: name = $authStore?.name;
 	$: univ = $authStore?.university;
 	$: resumes = $authStore?.resumes; 
+	$: console.log(resumes)
 	let inputName, inputUniv;
 
 	let image: FileList;
