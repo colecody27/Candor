@@ -8,8 +8,8 @@
 	const modalStore = getModalStore();
 	export let app = {};
 	let tempNotes = app.Notes;
+	let currResume = {...app.resume}; 
 
-	// Watch for changes in selections
 	$: {
 		dataHandlers.updatePlatform(app.Id, app.Platform);
 		console.log('Update platform');
@@ -44,15 +44,26 @@
 				>
 			{/if}
 		</div>
-		<!-- Delete -->
+	</div>
+
+	<!-- Resumes -->
 		<div class="inline-block">
-			<button
-				class="inline-block btn-md btn variant-filled-error"
-				on:click={() => {
-					dataHandlers.removeApp(app.Id);
-				}}>Remove</button
-			>
+			<h3 class="inline-block text-2xl">Resume:</h3>
+			<select class='select' name="" id="" bind:value={app.resume.name} on:change={ async () => {await dataHandlers.updateAppResume(app.Id, app.resume, currResume); currResume = {...app.resume}; console.log("Update resume")}} >
+				{#each Object.entries($authStore.resumes) as resume}
+					<option value={resume[0]}>{resume[0]}</option>	
+				{/each}
+			</select>
 		</div>
+
+	<!-- Delete -->
+	<div class="block">
+		<button
+			class="inline-block btn-md btn variant-filled-error"
+			on:click={() => {
+				dataHandlers.removeApp(app.Id);
+			}}>Remove</button
+		>
 	</div>
 
 	<!-- Interviews  -->

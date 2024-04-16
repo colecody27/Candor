@@ -615,19 +615,43 @@ export const dataHandlers = {
 					[`resumes.${resumeName}.count`]: increment(1)
 				});
 				authStore.update((curr) => {
-					curr.resumes[defaultResume.name].count = curr.resumes[defaultResume.name].count+1
+					curr.resumes[resumeName].count++;
 					return curr;
 				});
 				break;
 			case "decrement":
-				await updateDoc(userDoc, {
-					[`resumes.${resumeName}.count`]: increment(-1)
-				});
-				authStore.update((curr) => {
-					curr.resumes[resumeName].count = curr.resumes[resumeName].count-1
-					return curr;
-				});
+				const snapSht = await getDoc(userDoc)
+				if (snapSht.data().resumes[resumeName].count > 0) {
+					await updateDoc(userDoc, {
+						[`resumes.${resumeName}.count`]: increment(-1)
+					});
+					authStore.update((curr) => {
+						console.log("Resumes: ")
+						console.log(curr.resumes)
+						curr.resumes[resumeName].count--;
+						console.log(curr.resumes[resumeName].count)
+						return curr;
+					});
+				}
 				break;
 		}
+	}, 
+
+	updateAppResume: async (id, newResume, oldResume) => {		
+		const route = 'users/' + User.email + '/applications/' + id;
+		const docRef = doc(db, route);
+		console.log("New Resume: ")
+		console.log(newResume)
+		console.log("Old Resume: ")
+		console.log(oldResume)
+
+		// Update application's resume
+		await updateDoc(docRef, {
+			"resume": newResume
+		});
+
+		// Update resume counts
+		await dataHandlers.updateResumeCount(newResume.name, "increment")
+		await dataHandlers.updateResumeCount(oldResume.name, "decrement")
 	}
 };

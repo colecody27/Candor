@@ -8,7 +8,6 @@
 	// Skip to application that has the next closest day
 	export let apps;
 	apps.sort((a, b) => b.Date.toDate() - a.Date.toDate())
-	$: console.log(apps)
 	let activity = [0, 0, 0, 0, 0, 0, 0];
 	let dates: Date[] = [];
 	let day = 7;
@@ -22,7 +21,6 @@
 	}
 
 	while (day > 0 && appIndx < apps.length) {
-		console.log("here")
 		let app = apps.at(appIndx);
 		let appDate = app.Date.toDate();
 		// If application date is outside of 7 day window, break
@@ -31,7 +29,6 @@
 		}
 
 		let dayDiff = currDate.getDate() - 7 + day - appDate.getDate();
-		console.log("Current date: " + currDate.getDate() + " Appdate: " + appDate.getDate())
 		// Check if apps are on the given day
 		while (dayDiff == 0) {
 			activity[day-1] += 1;
