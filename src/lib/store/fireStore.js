@@ -151,7 +151,8 @@ export const dataHandlers = {
 		// UPDATE LOCAL STORAGE
 		if (docRef) {
 			authStore.update((curr) => {
-				return { ...curr, terms: [...curr.terms, term] };
+				curr.terms.push(term)
+				return curr;
 			});
 		}
 	},
@@ -202,6 +203,7 @@ export const dataHandlers = {
 		querySnapshot.forEach(async (app) => {
 			const route = 'users/' + User.email + '/applications/' + app.id;
 			const docRef = doc(db, route);
+			await dataHandlers.updateResumeCount(app.data().resume, "decrement")
 			await deleteDoc(docRef);
 		});
 
@@ -218,6 +220,7 @@ export const dataHandlers = {
 				for (var i = 0; i < curr.apps.length; i++) {
 					if (curr.apps.at(i).Term === term) curr.apps.splice(i, 1);
 				}
+				console.log(curr.apps)
 				const indx = curr.terms.findIndex((element) => element === term);
 				if (indx > -1) curr.terms.splice(indx, 1);
 				return curr;

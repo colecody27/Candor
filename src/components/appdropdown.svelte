@@ -14,9 +14,6 @@
 		dataHandlers.updateTopics(app.Id, app.Topics);
 		console.log('Update topics');
 	}
-	const handleNoteSubmission = async (e) => {
-		if (e.key == 'Enter' || e.key == 13) dataHandlers.updateNotes(app.Id, tempNotes);
-	};
 </script>
 
 <div class="">
@@ -161,11 +158,9 @@
 		<textarea
 			class="textarea"
 			rows="3"
-			placeholder="Press enter upon completion to save..."
+			placeholder="Click outside of notes to save..."
 			bind:value={tempNotes}
-			on:keydown={async (e) => {
-				handleNoteSubmission(e);
-			}}
+			on:blur={async () => await dataHandlers.updateNotes(app.Id, tempNotes)}
 		/>
 	</div>
 </div>
