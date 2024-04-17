@@ -94,6 +94,13 @@
 			<!-- Resumes -->
 			<h2 class="h4 mt-5">Resumes</h2>
 			<input class="input" type="file" accept="application/pdf" bind:files={resumeFile} />
+			<!-- on:change= {async () => {await dataHandlers.updateDefaultResume($authStore.resume.name)}} -->
+			<select class='select mt-3' size=3 bind:value={$authStore.resume} >
+				{#each Object.entries(resumes) as resume }
+					<option value={resume[0]} on:click= {async () => {await dataHandlers.updateDefaultResume(resume[0])}}> {resume[0]} </option>
+				{/each}
+			</select>
+
 
 			<dl class="list-dl mt-5">
 				<!-- resumes: [resume, {name, university, count}]-->

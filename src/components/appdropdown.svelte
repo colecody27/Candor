@@ -8,12 +8,8 @@
 	const modalStore = getModalStore();
 	export let app = {};
 	let tempNotes = app.Notes;
-	let currResume = {...app.resume}; 
+	let currResume = app.resume; 
 
-	// $: {
-	// 	dataHandlers.updatePlatform(app.Id, app.Platform);
-	// 	console.log('Update platform');
-	// }
 	$: {
 		dataHandlers.updateTopics(app.Id, app.Topics);
 		console.log('Update topics');
@@ -48,7 +44,7 @@
 		<!-- Resumes -->
 		<div class="flex">
 			<h3 class="text-2xl mr-2">Resume:</h3>
-			<select class='select' name="" id="" bind:value={app.resume.name} on:change={ async () => {await dataHandlers.updateAppResume(app.Id, app.resume, currResume); currResume = {...app.resume}; console.log("Update resume")}} >
+			<select class='select' name="" id="" bind:value={app.resume} on:change={ async () => {await dataHandlers.updateAppResume(app.Id, app.resume, currResume); currResume = app.resume; console.log("Update resume")}} >
 				{#each Object.entries($authStore.resumes) as resume}
 					<option value={resume[0]}>{resume[0]}</option>	
 				{/each}

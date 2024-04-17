@@ -52,7 +52,7 @@ export const dataHandlers = {
 			Notes: '',
 			Topics: [],
 			Id: '',
-			resume: defaultResume,
+			resume: userInfo.resume,
 			Date: Timestamp.fromDate(new Date())
 		};
 
@@ -63,8 +63,8 @@ export const dataHandlers = {
 		application.Id = docRef.id;
 
 		// Increment resume count
-		if (defaultResume.name != '') {
-			await dataHandlers.updateResumeCount(defaultResume.name, "increment");
+		if (userInfo.resume != '') {
+			await dataHandlers.updateResumeCount(userInfo.resume, "increment");
 		}
 
 		// UPDATE LOCAL STORAGE
@@ -331,9 +331,7 @@ export const dataHandlers = {
 				await updateDoc(docRef, {
 					Topics: topics
 				});
-			}catch(e){
-				
-			}
+			}catch(e){}
 		}
 	},
 
@@ -612,19 +610,29 @@ export const dataHandlers = {
 				[`resumes.${resumeName}`]: {name:req.resume.name, url:url, count:0}
 			});
 			authStore.update((curr) => {
-				curr.resume = {name:req.resume.name, url:url, count:0}
+				curr.resume = req.resume.name
 				return curr;
 			});
 
 			// Update user's default resume
 			await updateDoc(userDoc, {
-				resume: {name:resumeName, url:url, count:0}
+				resume: resumeName
 			});
 			authStore.update((curr) => {
 				curr.resumes[`${resumeName}`] = {name:req.resume.name, url:url, count:0}
 				return curr;
 			});
         }
+	},
+
+	updateDefaultResume: async (resumeName) => {		
+		const route = 'users/' + User.email;
+		const docRef = doc(db, route);
+
+		// Update application's resume
+		await updateDoc(docRef, {
+			"resume": resumeName
+		});
 	},
 
 	updateResumeCount: async (resumeName, command) => {
@@ -664,10 +672,6 @@ export const dataHandlers = {
 	updateAppResume: async (id, newResume, oldResume) => {		
 		const route = 'users/' + User.email + '/applications/' + id;
 		const docRef = doc(db, route);
-		console.log("New Resume: ")
-		console.log(newResume)
-		console.log("Old Resume: ")
-		console.log(oldResume)
 
 		// Update application's resume
 		await updateDoc(docRef, {
@@ -675,7 +679,7 @@ export const dataHandlers = {
 		});
 
 		// Update resume counts
-		await dataHandlers.updateResumeCount(newResume.name, "increment")
-		await dataHandlers.updateResumeCount(oldResume.name, "decrement")
+		await dataHandlers.updateResumeCount(newResume, "increment")
+		await dataHandlers.updateResumeCount(oldResume, "decrement")
 	}
 };
