@@ -11,7 +11,7 @@
 	$: email = $authStore?.friend.email;
 	$: apps = $authStore?.friend.apps;
 	$: terms = $authStore?.friend.terms;
-	let tabSet = $authStore?.terms[0];
+	let tabSet = $authStore?.friend.terms[0];
 </script>
 
 <div class="flex flex-row m-10">

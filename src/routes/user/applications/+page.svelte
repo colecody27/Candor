@@ -66,7 +66,7 @@
 							{term}
 							<button
 								on:click={async () => {
-									// MODAL
+									// Rename term
 									new Promise((resolve) => {
 										const modal = {
 											type: 'prompt',
@@ -123,8 +123,10 @@
 									if (r) {
 										if ($authStore.terms.includes(r))
 											toastStore.trigger(fail)
-										else
+										else {
 											await dataHandlers.addTerm(r);
+											tabSet = r;
+										}
 									} 
 								});
 							}}
