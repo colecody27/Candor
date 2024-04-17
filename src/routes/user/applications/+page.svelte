@@ -1,4 +1,4 @@
-<script>
+<script lang=ts>
 	import { Accordion, AccordionItem, TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
 	import Appdropdown from '../../../components/appdropdown.svelte';
 	import Addapp from '../../../components/addapp.svelte';
@@ -7,10 +7,16 @@
 	import { onMount } from 'svelte';
 	import addIcon from '$lib/static/add.png';
 	import editIcon from '$lib/static/editIcon.png';
-	import { getModalStore } from '@skeletonlabs/skeleton';
-
+	import { getModalStore, Toast, getToastStore, } from '@skeletonlabs/skeleton';
+	
 	const modalStore = getModalStore();
+	const toastStore = getToastStore();
 	let tabSet = $authStore?.terms[0];
+
+	const fail: ToastSettings = {
+		message: 'Term must be unique 😕',
+		background: 'variant-filled-error'
+	};
 </script>
 
 <!-- Recommended Roles -->
@@ -76,8 +82,13 @@
 										modalStore.trigger(modal);
 									}).then(async (r) => {
 										if (r) {
-											await dataHandlers.editTerm(term, r);
-											tabSet = r;
+											if ($authStore.terms.includes(r))
+												toastStore.trigger(fail)
+											else {
+												await dataHandlers.editTerm(term, r);
+												tabSet = r;
+											}
+											
 										}
 									});
 								}}
@@ -109,7 +120,12 @@
 									};
 									modalStore.trigger(modal);
 								}).then(async (r) => {
-									if (r) await dataHandlers.addTerm(r);
+									if (r) {
+										if ($authStore.terms.includes(r))
+											toastStore.trigger(fail)
+										else
+											await dataHandlers.addTerm(r);
+									} 
 								});
 							}}
 							class="btn-icon h-8 w-8 variant-filled-secondary"
