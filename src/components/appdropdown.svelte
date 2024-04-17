@@ -10,10 +10,10 @@
 	let tempNotes = app.Notes;
 	let currResume = {...app.resume}; 
 
-	$: {
-		dataHandlers.updatePlatform(app.Id, app.Platform);
-		console.log('Update platform');
-	}
+	// $: {
+	// 	dataHandlers.updatePlatform(app.Id, app.Platform);
+	// 	console.log('Update platform');
+	// }
 	$: {
 		dataHandlers.updateTopics(app.Id, app.Topics);
 		console.log('Update topics');
@@ -138,7 +138,7 @@
 	<div class="mt-4 flex flex-col">
 		<h3 class="text-2xl">Online Assessment:</h3>
 		<h2 class="ml-4 mt-2 inline-block">Platform:</h2>
-		<select bind:value={app.Platform} class="select max-w-max">
+		<select bind:value={app.Platform} on:change={ async () => {await dataHandlers.updatePlatform(app.Id, app.Platform); console.log("Update platform")}} class="select max-w-max">
 			<option value="Unknown">Unknown</option>
 			<option value="CodeSignal">CodeSignal</option>
 			<option value="Leetcode">Leetcode</option>

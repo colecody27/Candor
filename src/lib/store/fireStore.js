@@ -327,9 +327,13 @@ export const dataHandlers = {
 			// UPDATE DB
 			const route = 'users/' + User.email + '/applications/' + id;
 			const docRef = doc(db, route);
-			await updateDoc(docRef, {
-				Topics: topics
-			});
+			try {
+				await updateDoc(docRef, {
+					Topics: topics
+				});
+			}catch(e){
+				
+			}
 		}
 	},
 
