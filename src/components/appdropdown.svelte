@@ -44,27 +44,27 @@
 				>
 			{/if}
 		</div>
-	</div>
-
-	<!-- Resumes -->
-		<div class="inline-block">
-			<h3 class="inline-block text-2xl">Resume:</h3>
+		
+		<!-- Resumes -->
+		<div class="flex">
+			<h3 class="text-2xl mr-2">Resume:</h3>
 			<select class='select' name="" id="" bind:value={app.resume.name} on:change={ async () => {await dataHandlers.updateAppResume(app.Id, app.resume, currResume); currResume = {...app.resume}; console.log("Update resume")}} >
 				{#each Object.entries($authStore.resumes) as resume}
 					<option value={resume[0]}>{resume[0]}</option>	
 				{/each}
 			</select>
 		</div>
-
-	<!-- Delete -->
-	<div class="block">
-		<button
+		
+		<!-- Delete -->
+		<div class="block">
+			<button
 			class="inline-block btn-md btn variant-filled-error"
 			on:click={() => {
 				dataHandlers.removeApp(app.Id);
 			}}>Remove</button
 		>
 	</div>
+</div>
 
 	<!-- Interviews  -->
 	<div class="mt-4">

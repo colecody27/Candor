@@ -511,6 +511,26 @@ export const dataHandlers = {
 		});
 	},
 
+	removeFriend: async (friend) => {
+		const userDoc = doc(db, `users/${User.email}`);
+		const friendDoc = doc(db, `users/${friend.email}`);
+
+		// Remove friend from friends list 
+		await updateDoc(userDoc, {
+			"friends" : arrayRemove(friend)
+		});
+
+		// From user from friend's friend list
+		await updateDoc(friendDoc, {
+			"friends" : arrayRemove({name: userInfo.name, university: userInfo.university, email: User.email})
+		});
+
+		authStore.update((curr) => {
+			curr.friends.splice(curr.friends.indexOf(friend), 1)
+			return curr;
+		});
+	},	
+
 	deleteAccount: async () => {
 		// Iterate through friend's emails and remove the current user from their friend's list
 		for (let i = 0; i < friends.length; i++) {

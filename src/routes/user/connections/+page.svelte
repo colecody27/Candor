@@ -98,6 +98,16 @@
 						<p>{friend.email}</p>
 					</div>
 				</button>
+				
+				<!-- Remove friend -->
+				<div class='flex flex-col items-center justify-center'>
+					<button
+						class="btn-md btn variant-filled-error"
+						on:click={() => {
+							dataHandlers.removeFriend(friend);
+						}}>Remove
+					</button>
+				</div>
 			</div>
 		{/each}
 	</div>

@@ -1,6 +1,9 @@
 <script>
-	export let apps;
+	import { authStore } from "$lib/store/authStore";
 
+	export let apps;
+	apps.sort((a, b) => b.Date.toDate() - a.Date.toDate())
+	console.log(apps)
 	const getAdvancements = () => {
 		let count = 0;
 		for (var i = 0; i < apps.length; i++) {
@@ -12,11 +15,20 @@
 		return count;
 	};
 	const getDayStreak = () => {
-		let streak = 0;
-		const today = new Date();
+		if (apps.length == 0)
+			return 0; 
 
+		const today = new Date();
+		let streak = 0;
+
+		if (apps.length == 1 && today.getDay() - apps.at(0).Date.toDate().getDay() < 1)
+			return 1;
+			
 		for (var i = 0; i < apps.length - 1; i++) {
-			if (i == 0 && today.getDay() - apps.at(0).Date.toDate().getDay() < 1) streak++;
+			if (i == 0 && today.getDay() - apps.at(0).Date.toDate().getDay() < 1) {
+				streak++;
+				continue;
+			}
 			const app1 = apps.at(i);
 			const app2 = apps.at(i + 1);
 			if (
@@ -36,7 +48,7 @@
 		['Total Applications', apps.length],
 		['Total Advancements', getAdvancements()],
 		['Day Streak', getDayStreak()],
-		['Connections', '8']
+		['Connections', $authStore.friends.length]
 	];
 </script>
 
