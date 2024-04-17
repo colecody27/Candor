@@ -22,6 +22,7 @@
 	import overIcon from '$lib/static/overview.png';
 	import { collection, addDoc, doc, setDoc, getDoc, getDocs } from 'firebase/firestore';
 	import { db } from '$lib/firebase/firebase.client';
+	import Activity from '../../components/activity.svelte';
 
 	// Instantiate pop up
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
@@ -86,12 +87,14 @@
 						<!--Avatar-->
 						{#if (name.split(' ').length < 2) }
 							<Avatar
+								class='m-auto'
 								initials={name.split(' ')[0].charAt(0)}
 								border="border-4 border-surface-300-600-token hover:!border-primary-500"
 								cursor="cursor-pointer"
 							></Avatar>
 						{:else}
 							<Avatar
+								class='m-auto'
 								initials={name.split(' ')[0].charAt(0) +
 								name.split(' ')[1].charAt(0)}
 								border="border-4 border-surface-300-600-token hover:!border-primary-500"
@@ -101,6 +104,7 @@
 						<!-- -->
 						<!--Username-->
 						<h1 class="mr-2">{name}</h1>
+						<Activity apps={$authStore.apps} />
 					</button>
 				</svelte:fragment>
 			</AppBar>

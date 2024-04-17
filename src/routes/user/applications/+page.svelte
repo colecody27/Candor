@@ -24,7 +24,9 @@
 	<h1 class="text-3xl mb-5">Recommended Roles</h1>
 	<Accordion>
 		<div class="rounded-b-xl">
-			<AccordionItem>
+			<h3 class='h5 text-center '>No recommendations at this time </h3>
+			 <h3 class='text-center'>☹️</h3>
+			<!-- <AccordionItem>
 				<svelte:fragment slot="lead"
 					><h3 class="text-lg">Software Engineer, AWS</h3></svelte:fragment
 				>
@@ -36,7 +38,7 @@
 						<Appdropdown />
 					</div>
 				</svelte:fragment>
-			</AccordionItem>
+			</AccordionItem> 
 		</div>
 
 		<AccordionItem>
@@ -48,6 +50,7 @@
 			</svelte:fragment>
 			<svelte:fragment slot="content">(content)</svelte:fragment>
 		</AccordionItem>
+	-->
 		<!-- ... -->
 	</Accordion>
 </div>
