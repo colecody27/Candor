@@ -122,12 +122,12 @@
 					</svelte:fragment>
 					<span>Applications</span>
 				</AppRailAnchor>
-				<AppRailAnchor href="analytics" selected={$page.url.pathname === '/user/analytics'}>
+				<!-- <AppRailAnchor href="analytics" selected={$page.url.pathname === '/user/analytics'}>
 					<svelte:fragment slot="lead">
 						<img src={anaIcon} class="h-8" alt="" />
 					</svelte:fragment>
 					<span>Analytics</span>
-				</AppRailAnchor>
+				</AppRailAnchor> -->
 				<AppRailAnchor href="connections" selected={$page.url.pathname === '/user/connections'}>
 					<svelte:fragment slot="lead">
 						<img src={connIcon} class="h-8" alt="" />
