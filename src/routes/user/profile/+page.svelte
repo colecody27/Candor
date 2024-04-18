@@ -15,6 +15,8 @@
 	$: univ = $authStore?.university;
 	$: resumes = $authStore?.resumes; 
 	let inputName, inputUniv;
+	
+	
 
 	let image: FileList;
 	let resumeFile;  
@@ -103,7 +105,7 @@
 
 			<dl class="list-dl mt-5">
 				<!-- resumes: [resume, {name, university, count}]-->
-				{#each Object.entries(resumes) as resume }
+				{#each Object.entries(resumes).sort((a, b) => b[1].count - a[1].count) as resume }
 				<div>
 					<!-- <span class="badge bg-primary-500">💀</span> -->
 					<img class="h-4 w-4" src={paper} alt="" />

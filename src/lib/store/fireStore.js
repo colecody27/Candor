@@ -217,12 +217,10 @@ export const dataHandlers = {
 		// UPDATE LOCAL STORAGE
 		if (termRef) {
 			authStore.update((curr) => {
-				for (var i = 0; i < curr.apps.length; i++) {
-					if (curr.apps.at(i).Term === term) curr.apps.splice(i, 1);
-				}
+				curr.apps = curr.apps.filter((app) => app.Term != term)
+				curr.terms = curr.terms.filter((t) => t != term)
+				console.log("Apps:")
 				console.log(curr.apps)
-				const indx = curr.terms.findIndex((element) => element === term);
-				if (indx > -1) curr.terms.splice(indx, 1);
 				return curr;
 			});
 		}

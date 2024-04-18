@@ -40,8 +40,7 @@
 	/** @type {import("@firebase/auth").User} */
 	export let User;
 	let name; 
-	// let email:string
-
+	
 	authStore.subscribe((curr) => {
 		User = curr?.user;
 		name = curr?.name; 

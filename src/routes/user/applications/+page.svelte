@@ -185,7 +185,10 @@
 										};
 										modalStore.trigger(modal);
 									}).then(async (r) => {
-										if (r) await dataHandlers.removeTerm(tabSet);
+										if (r) {
+											await dataHandlers.removeTerm(tabSet);
+											tabSet = $authStore?.terms[0]
+										}
 									});
 								}}
 								>Remove term
