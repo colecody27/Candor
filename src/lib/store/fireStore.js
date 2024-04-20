@@ -29,6 +29,7 @@ let friends;
 let defaultResume;
 let userInfo; 
 const storage = getStorage();
+
 authStore.subscribe((curr) => {
 	User = curr?.user;
 	univ = curr?.university;
@@ -70,7 +71,7 @@ export const dataHandlers = {
 		// UPDATE LOCAL STORAGE
 		if (docRef) {
 			authStore.update((curr) => {
-				return { ...curr, apps: [...curr.apps, application] };
+				return { ...curr, apps: [application, ...curr.apps] };
 			});
 		}
 	},
@@ -648,6 +649,8 @@ export const dataHandlers = {
 					[`resumes.${resumeName}.count`]: increment(1)
 				});
 				authStore.update((curr) => {
+					console.log(curr.resumes)
+					console.log(resumeName)
 					curr.resumes[resumeName].count++;
 					return curr;
 				});

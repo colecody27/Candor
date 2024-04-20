@@ -52,12 +52,12 @@ export const authHandlers = {
 						name: User.displayName,
 						email: User.email,
 						university: '',
-						terms: ['No term'],
+						terms: ["Spring 2024"],
 						friends: [],
 						rcvdReqs: [],
 						sentReqs: [],
 						friend: {}, 
-						resume: {}, 
+						resume: '', 
 						resumes: {}
 					});
 				}

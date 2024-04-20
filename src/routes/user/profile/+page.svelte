@@ -143,7 +143,7 @@
 							type: 'confirm',
 							// Data
 							title: 'Please Confirm',
-							body: 'All applications and user data will be deleted. Are you sure you wish to proceed?',
+							body: 'All applications will be archived and user data will be deleted. Are you sure you wish to proceed?',
 							// Returns the updated response value
 							response: (r) => resolve(r)
 						};

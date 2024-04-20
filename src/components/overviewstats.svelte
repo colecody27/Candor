@@ -45,9 +45,9 @@
 	};
 
 	$: stats = [
-		['Total Applications', apps.length],
-		['Total Advancements', getAdvancements()],
-		['Day Streak', getDayStreak()],
+		['Applications', apps.length],
+		['Advancements', getAdvancements()],
+		['Submission Day Streak', getDayStreak()],
 		['Connections', $authStore.friends.length]
 	];
 </script>
