@@ -2,8 +2,6 @@
 	import { AppShell, AppBar, Avatar } from '@skeletonlabs/skeleton';
 	import { authHandlers, provider } from '../lib/store/authStore';
 	import auth from '$lib/firebase/firebase.client';
-	import img1 from '$lib/static/img1.png'
-	import img2 from '$lib/static/img2.png'
 	import img3 from '$lib/static/img3.png'
 
 	async function handleLogin() {
