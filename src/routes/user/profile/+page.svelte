@@ -116,7 +116,7 @@
 					<button
 						class="btn-icon h-5 w-5 variant-filled-error"
 						on:click={() => {
-							dataHandlers.removeResume(app.Id, key);
+							dataHandlers.removeResume(resume[0]);
 						}}><img class="h-4 w-4 m-auto" src={xIcon} alt="" /></button
 					>
 				</div>

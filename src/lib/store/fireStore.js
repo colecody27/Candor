@@ -20,7 +20,7 @@ import {
 import { getAuth, deleteUser } from 'firebase/auth';
 import { authStore } from './authStore';
 import { update } from 'firebase/database';
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytes, deleteObject } from 'firebase/storage';
 
 /** @type {import("@firebase/auth").User} */
 let User;
@@ -689,5 +689,66 @@ export const dataHandlers = {
 		// Update resume counts
 		await dataHandlers.updateResumeCount(newResume, "increment")
 		await dataHandlers.updateResumeCount(oldResume, "decrement")
-	}
+	},
+
+	removeResume: async (resumeName) => {		
+		// DB - Update every application
+		const appRoute = 'users/' + User.email + '/applications';
+		const q = query(collection(db, appRoute), where('resume', '==', resumeName));
+		const querySnapshot = await getDocs(q);
+		querySnapshot.forEach(async (app) => {
+			const route = 'users/' + User.email + '/applications/' + app.id;
+			const docRef = doc(db, route);
+
+			// Update application's resume
+			await updateDoc(docRef, {
+				"resume": ""
+			});
+		});
+		authStore.update((curr) => {
+			curr.apps.map((app) => {
+				if(app.resume.localeCompare(resumeName) == 0)
+					return {...app, resume: ""}
+			})
+			return curr;
+		})
+
+
+		// Delete file from storage
+		const pdfRef = ref(storage, `users/${User.email}/${resumeName}.pdf`);
+		await deleteObject(pdfRef)
+
+		// Delete resume from resumes
+		const resumesRef = 'users/' + User.email;
+		const resumesDoc = doc(db, resumesRef)
+		await updateDoc(resumesDoc, {
+			[`resumes.${resumeName}`] : deleteField()
+		})
+		authStore.update((curr) => {
+			delete curr.resumes[`${resumeName}`]
+			// curr.resumes.delete(resumeName)
+			return curr;
+		})
+
+		// Update default resume
+		const resumeRef = 'users/' + User.email;
+		const resumeDoc = doc(db, resumeRef)
+		if (userInfo.resumes.length >= 1) {
+			await updateDoc(resumeDoc, {
+				"resume" : Object.entries(userInfo.resumes)[0][0]
+			})
+			authStore.update((curr) => {
+				curr.resume = Object.entries(userInfo.resumes)[0][0]
+				return curr;
+			})
+		} else {
+			await updateDoc(resumeDoc, {
+				"resume" : ""
+			})
+			authStore.update((curr) => {
+				curr.resume = ""
+				return curr;
+			})
+		}	
+	},
 };
