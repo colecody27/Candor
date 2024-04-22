@@ -116,7 +116,7 @@ export const dataHandlers = {
 		// Increment resume count
 		if (defaultResume.name != '') {
 			console.log(userInfo)
-			let resumeName = userInfo.apps.find((app) => app.Id === id).resume.name; 
+			let resumeName = userInfo.apps.find((app) => app.Id === id).resume; 
 			console.log("resume name:" + resumeName)
 			await dataHandlers.updateResumeCount(resumeName, "decrement");
 		}
@@ -596,8 +596,9 @@ export const dataHandlers = {
 		}
 
 		// Upload resume and set as default
-        if (req.resume != undefined) {
+        if (req.resume != undefined || req.resume !== "") {
 			let resumeName = req.resume.name.slice(0, req.resume.name.indexOf(".")); 
+			console.log("resume name: " + resumeName)
             const storageRef = ref(storage, `users/${User.email}/${req.resume.name}`)
 			// Verify resume name is unique
 			if (resumeName in userData?.resumes)
@@ -611,15 +612,16 @@ export const dataHandlers = {
 			await updateDoc(userDoc, {
 				[`resumes.${resumeName}`]: {name:req.resume.name, url:url, count:0}
 			});
-			authStore.update((curr) => {
-				curr.resume = req.resume.name
-				return curr;
-			});
-
 			// Update user's default resume
 			await updateDoc(userDoc, {
 				resume: resumeName
 			});
+			authStore.update((curr) => {
+				curr.resume = resumeName
+				return curr;
+			});
+
+			
 			authStore.update((curr) => {
 				curr.resumes[`${resumeName}`] = {name:req.resume.name, url:url, count:0}
 				return curr;
@@ -638,9 +640,9 @@ export const dataHandlers = {
 	},
 
 	updateResumeCount: async (resumeName, command) => {
-		if (resumeName == undefined)
+		if (resumeName === "") 
 			return;
-		
+
 		const userDoc = doc(db, `users/${User.email}`);
 		// Update document with this name
 		switch(command) {
