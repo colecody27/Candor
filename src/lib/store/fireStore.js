@@ -502,7 +502,8 @@ export const dataHandlers = {
 			'friend.email': friend.email,
 			'friend.name': friendDoc.data().name,
 			'friend.apps': tempApps,
-			'friend.terms': friendDoc.data().terms
+			'friend.terms': friendDoc.data().terms,
+			'friend.resumes': friendDoc.data().resumes
 		});
 
 		// Update local store
@@ -511,6 +512,7 @@ export const dataHandlers = {
 			curr.friend.name = friendDoc.data().name;
 			curr.friend.apps = tempApps;
 			curr.friend.terms = friendDoc.data().terms;
+			curr.friend.resumes = friendDoc.data().resumes;
 			return curr;
 		});
 	},

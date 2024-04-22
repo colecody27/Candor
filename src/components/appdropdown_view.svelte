@@ -5,6 +5,8 @@
 
 	const modalStore = getModalStore();
 	export let app = {};
+	$: resumes = $authStore.friend.resumes
+	let resumeLink = $authStore.friend.resumes[`${app.resume}`].url
 </script>
 
 <div class="">
@@ -18,6 +20,12 @@
 				<span class="badge variant-filled-error inline-block">Rejected</span>
 			{/if}
 		</div>
+	</div>
+
+	<!-- Resume -->
+	<div class="flex mt-5 ">
+		<h3 class="text-2xl mr-2">Resume:</h3>
+		<a class='badge variant-filled inline-block underline' href={resumeLink}>{app.resume}</a>
 	</div>
 
 	<!-- Interviews  -->
