@@ -97,7 +97,7 @@
 	</AppRail>
 </Drawer>
 	<!-- App Shell -->
-	<AppShell  slotSidebarLeft="w-0 lg:w-64">
+	<AppShell  slotSidebarLeft="w-0 lg:w-32">
 		<!-- App Bar -->
 		<svelte:fragment slot="header">
 			<AppBar>
