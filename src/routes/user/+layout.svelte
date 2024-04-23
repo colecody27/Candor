@@ -8,7 +8,10 @@
 		AppRailTile,
 		AppRailAnchor,
 		popup,
-		storePopup
+		storePopup,
+		initializeStores,
+		Drawer,
+		getDrawerStore
 	} from '@skeletonlabs/skeleton';
 	import { authHandlers, authStore } from '../../lib/store/authStore';
 	import auth from '$lib/firebase/firebase.client';
@@ -23,6 +26,16 @@
 	import { collection, addDoc, doc, setDoc, getDoc, getDocs } from 'firebase/firestore';
 	import { db } from '$lib/firebase/firebase.client';
 	import Activity from '../../components/activity.svelte';
+
+	// Drawer 
+	initializeStores();
+	const drawerStore = getDrawerStore();
+	function drawerOpen(): void {
+		drawerStore.open({});
+	}
+	function drawerClose(): void {
+    	drawerStore.close();
+	}
 
 	// Instantiate pop up
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
@@ -61,16 +74,51 @@
 
 <!--LOADED-->
 {#if $authStore.currentUser}
+
+<Drawer> 
+	<AppRail>
+		<!-- Tiles -->
+		<AppRailAnchor href="overview" on:click={drawerClose} selected={$page.url.pathname === '/user/overview'}>
+			<svelte:fragment slot="lead">
+				<img src={overIcon} class="h-8" alt="" />
+			</svelte:fragment>
+			<span>Overview</span>
+		</AppRailAnchor>
+		<AppRailAnchor href="applications" on:click={drawerClose} selected={$page.url.pathname === '/user/applications'}>
+			<svelte:fragment slot="lead">
+				<img src={appIcon} class="h-8" alt="" />
+			</svelte:fragment>
+			<span>Applications</span>
+		</AppRailAnchor>
+		<AppRailAnchor href="connections" on:click={drawerClose} selected={$page.url.pathname === '/user/connections'}>
+			<svelte:fragment slot="lead">
+				<img src={connIcon} class="h-8" alt="" />
+			</svelte:fragment>
+			<span>Connections</span>
+		</AppRailAnchor>
+	</AppRail>
+</Drawer>
 	<!-- App Shell -->
-	<AppShell>
+	<AppShell  slotSidebarLeft="w-0 lg:w-64">
 		<!-- App Bar -->
 		<svelte:fragment slot="header">
 			<AppBar>
-				<!--Title-->
 				<svelte:fragment slot="lead">
-					<strong class="text-4xl">Candor</strong>
+					<div class="flex items-center">
+						<button on:click={drawerOpen} class="lg:hidden btn btn-sm mr-4">
+							<span>
+								<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
+									<rect width="100" height="20" />
+									<rect y="30" width="100" height="20" />
+									<rect y="60" width="100" height="20" />
+								</svg>
+							</span>
+						</button>
+						<!--Title-->
+						<strong class="text-4xl">Candor</strong>
+					</div>
 				</svelte:fragment>
-				<!-- -->
+
 
 				<svelte:fragment slot="trail">
 					<div class="card p-4 w-40 shadow-xl" data-popup="popupFeatured">
@@ -125,19 +173,12 @@
 					</svelte:fragment>
 					<span>Applications</span>
 				</AppRailAnchor>
-				<!-- <AppRailAnchor href="analytics" selected={$page.url.pathname === '/user/analytics'}>
-					<svelte:fragment slot="lead">
-						<img src={anaIcon} class="h-8" alt="" />
-					</svelte:fragment>
-					<span>Analytics</span>
-				</AppRailAnchor> -->
 				<AppRailAnchor href="connections" selected={$page.url.pathname === '/user/connections'}>
 					<svelte:fragment slot="lead">
 						<img src={connIcon} class="h-8" alt="" />
 					</svelte:fragment>
 					<span>Connections</span>
 				</AppRailAnchor>
-				<!-- --- -->
 			</AppRail>
 		</svelte:fragment>
 
@@ -186,10 +227,6 @@
 			<AppRailAnchor href="applications" title="Account">
 				<svelte:fragment slot="lead">(icon)</svelte:fragment>
 				<span>Applications</span>
-			</AppRailAnchor>
-			<AppRailAnchor href="analytics" title="Account">
-				<svelte:fragment slot="lead">(icon)</svelte:fragment>
-				<span>Analytics</span>
 			</AppRailAnchor>
 			<AppRailAnchor href="connections" title="Account">
 				<svelte:fragment slot="lead">(icon)</svelte:fragment>

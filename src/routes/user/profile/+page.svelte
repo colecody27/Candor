@@ -128,7 +128,7 @@
 			<button
 				class="btn btn-md variant-filled-success m-auto mt-5"
 				on:click={() => {
-					if (resumeFile != undefined)
+					if (resumeFile != undefined) 
 						dataHandlers.updateAccount({ name: inputName, university: inputUniv, resume:resumeFile[0]});
 					else
 						dataHandlers.updateAccount({ name: inputName, university: inputUniv, resume:undefined});

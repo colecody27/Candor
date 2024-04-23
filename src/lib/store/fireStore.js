@@ -598,7 +598,7 @@ export const dataHandlers = {
 		}
 
 		// Upload resume and set as default
-        if (req.resume != undefined || req.resume !== "") {
+        if (req.resume != undefined) {
 			let resumeName = req.resume.name.slice(0, req.resume.name.indexOf(".")); 
 			console.log("resume name: " + resumeName)
             const storageRef = ref(storage, `users/${User.email}/${req.resume.name}`)
