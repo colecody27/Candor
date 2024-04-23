@@ -28,7 +28,6 @@
 	import Activity from '../../components/activity.svelte';
 
 	// Drawer 
-	initializeStores();
 	const drawerStore = getDrawerStore();
 	function drawerOpen(): void {
 		drawerStore.open({});
@@ -74,7 +73,6 @@
 
 <!--LOADED-->
 {#if $authStore.currentUser}
-
 <Drawer> 
 	<AppRail>
 		<!-- Tiles -->

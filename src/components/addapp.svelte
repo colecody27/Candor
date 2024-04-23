@@ -21,43 +21,46 @@
 	};
 </script>
 
-<div class="card p-4 w-3/4 mb-5 mt-10 m-auto max-w-4xl justify-between flex">
-	<!-- Role -->
-	<div class="inline-block">
-		<h3 class="text-l text-center">Role</h3>
-		<input
-			class="input"
-			bind:value={role}
-			type="text"
-			on:keydown={async (e) => {
-				handleSubmission(e, role, company, term);
-			}}
-		/>
+<div class="card p-4 w-3/4 mb-5 mt-10 m-auto max-w-2xl justify-between ">
+	<div class='flex flex-wrap justify-center'>
+		<!-- Role -->
+		<div class="inline-block">
+			<h3 class="text-l text-center">Role</h3>
+			<input
+				class="input"
+				bind:value={role}
+				type="text"
+				on:keydown={async (e) => {
+					handleSubmission(e, role, company, term);
+				}}
+			/>
+		</div>
+		<!-- Company  -->
+		<div class="inline-block">
+			<h3 class="text-l text-center">Company</h3>
+			<input
+				class="input"
+				bind:value={company}
+				type="text"
+				on:keydown={async (e) => {
+					handleSubmission(e, role, company, term);
+				}}
+			/>
+		</div>
+		<!-- Location -->
+		<div class="inline-block">
+			<h3 class="text-l text-center">Location</h3>
+			<input
+				class="input"
+				bind:value={location}
+				type="text"
+				on:keydown={async (e) => {
+					handleSubmission(e, role, company, term);
+				}}
+			/>
+		</div>
 	</div>
-	<!-- Company  -->
-	<div class="inline-block">
-		<h3 class="text-l text-center">Company</h3>
-		<input
-			class="input"
-			bind:value={company}
-			type="text"
-			on:keydown={async (e) => {
-				handleSubmission(e, role, company, term);
-			}}
-		/>
-	</div>
-	<!-- Location -->
-	<div class="inline-block">
-		<h3 class="text-l text-center">Location</h3>
-		<input
-			class="input"
-			bind:value={location}
-			type="text"
-			on:keydown={async (e) => {
-				handleSubmission(e, role, company, term);
-			}}
-		/>
-	</div>
+
 	<button
 		on:click={() => {
 			// ADD APP
@@ -67,7 +70,7 @@
 			company = '';
 			location = '';
 		}}
-		class=" btn-icon h-8 w-8 variant-filled-secondary"
-		><img class="h-6 w-6 m-auto" src={addIcon} alt="" /></button
+		class=" btn btn-sm variant-filled-secondary flex m-auto justify-center mt-3"
+		><!--<img class="h-6 w-6 m-auto" src={addIcon} alt="" />-->Submit</button
 	>
 </div>

@@ -9,6 +9,7 @@
 	export let app = {};
 	let tempNotes = app.Notes;
 	let currResume = app.resume; 
+	let innerWidth = 0; 
 
 	$: {
 		dataHandlers.updateTopics(app.Id, app.Topics);
@@ -16,11 +17,13 @@
 	}
 </script>
 
-<div class="">
+<svelte:window bind:innerWidth/>
+
+<div class="md:text-2xl sm:text-lg">
 	<!-- Status -->
-	<div class="justify-between flex">
+	<div class="justify-between flex md:text-2xl sm:text-l">
 		<div>
-			<h3 class="inline-block text-2xl">Status:</h3>
+			<h3 class="inline-block ">Status:</h3>
 			{#if app.Status}
 				<button
 					class="variant-filled inline-block btn btn-sm"
@@ -39,29 +42,42 @@
 		</div>
 		
 		<!-- Resumes -->
-		<div class="flex">
-			<h3 class="text-2xl mr-2">Resume:</h3>
+		{#if innerWidth > 700}
+			<div class="flex ">
+				<h3 class="mr-2">Resume:</h3>
+				<select class='select' name="" id="" bind:value={app.resume} on:change={ async () => {await dataHandlers.updateAppResume(app.Id, app.resume, currResume); currResume = app.resume; console.log("Update resume")}} >
+					{#each Object.entries($authStore.resumes) as resume}
+						<option value={resume[0]}>{resume[0]}</option>	
+					{/each}
+				</select>
+			</div>
+		{/if}
+
+		<!-- Delete -->
+		{#if innerWidth > 700}
+			<div class="block">
+				<button
+				class="inline-block btn-sm btn variant-filled-error"
+				on:click={() => {
+					dataHandlers.removeApp(app.Id);
+				}}>Remove</button
+			>
+			</div>
+		{/if}
+</div>
+	{#if innerWidth < 700}
+		<div class="flex flex-wrap ">
+			<h3 class="mr-2">Resume:</h3>
 			<select class='select' name="" id="" bind:value={app.resume} on:change={ async () => {await dataHandlers.updateAppResume(app.Id, app.resume, currResume); currResume = app.resume; console.log("Update resume")}} >
 				{#each Object.entries($authStore.resumes) as resume}
 					<option value={resume[0]}>{resume[0]}</option>	
 				{/each}
 			</select>
 		</div>
-		
-		<!-- Delete -->
-		<div class="block">
-			<button
-			class="inline-block btn-md btn variant-filled-error"
-			on:click={() => {
-				dataHandlers.removeApp(app.Id);
-			}}>Remove</button
-		>
-	</div>
-</div>
-
+	{/if}
 	<!-- Interviews  -->
 	<div class="mt-4">
-		<h3 class="text-2xl">
+		<h3 class="">
 			Interviews:
 			<button
 				on:click={async () => {
@@ -98,7 +114,7 @@
 								dataHandlers.removeInterview(app.Id, key);
 							}}><img class="h-4 w-4 m-auto" src={removeIcon} alt="" /></button
 						>
-						<h2 class="inline-block">{key}:</h2>
+						<h2 class="inline-block sm:text-sm md:text-lg">{key}:</h2>
 						{#if value === 'Rejected'}
 							<button
 								class="variant-filled-error inline-block btn btn-sm"
@@ -129,8 +145,8 @@
 
 	<!-- Online Assessment -->
 	<div class="mt-4 flex flex-col">
-		<h3 class="text-2xl">Online Assessment:</h3>
-		<h2 class="ml-4 mt-2 inline-block">Platform:</h2>
+		<h3 class="">Online Assessment:</h3>
+		<h2 class="ml-4 mt-2 inline-block md:text-lg sm:text-md">Platform:</h2>
 		<select bind:value={app.Platform} on:change={ async () => {await dataHandlers.updatePlatform(app.Id, app.Platform); console.log("Update platform")}} class="select max-w-max">
 			<option value="Unknown">Unknown</option>
 			<option value="CodeSignal">CodeSignal</option>
@@ -143,18 +159,18 @@
 			<option value="Other">Other</option>
 		</select>
 
-		<h2 class="ml-4 mt-2 inline-block">Topics:</h2>
+		<h2 class="mt-2 md:text-lg sm:text-md inline-block ">Topics:</h2>
 		<InputChip
-			class="min-w-80 max-w-max"
+			class="flex"
 			bind:value={app.Topics}
 			name="chips"
-			placeholder="Enter any topic related to the OA..."
+			placeholder="Enter any related topics..."
 		/>
 	</div>
 
 	<!-- Notes-->
 	<div class="mt-4">
-		<h3 class="text-2xl">Notes</h3>
+		<h3 class="">Notes</h3>
 		<textarea
 			class="textarea"
 			rows="3"
@@ -163,4 +179,17 @@
 			on:blur={async () => await dataHandlers.updateNotes(app.Id, tempNotes)}
 		/>
 	</div>
+
+
+	<!-- Delete -->
+	{#if innerWidth < 700}
+		<div class="block">
+			<button
+			class="inline-block btn-sm btn variant-filled-error flex m-auto"
+			on:click={() => {
+				dataHandlers.removeApp(app.Id);
+			}}>Remove</button
+		>
+		</div>
+	{/if}
 </div>
