@@ -7,7 +7,7 @@
 	let email;
 	const toastStore = getToastStore();
 	const success: ToastSettings = {
-		message: 'Reqest sent!',
+		message: 'Request sent!',
 		background: 'variant-filled-success'
 	};
 	const fail: ToastSettings = {
@@ -74,12 +74,12 @@
 </div>
 
 <!-- Friends -->
-<div class="flex flex-col space-y-3 mt-10">
+<div class="flex flex-col mt-10">
 	<h2 class="h2 flex m-auto">Connections</h2>
-	<div class="mx-5 flex flex-row">
+	<div class=" mt-5 m-auto justify-center flex flex-wrap">
 		{#each $authStore.friends as friend}
 			<!-- Avatar -->
-			<div class="card p-4 w-60 shadow-xl">
+			<div class="card p-4 mr-5 mb-5 w-60 shadow-xl">
 				<button
 					on:click={async () => {
 						await dataHandlers.getFriend(friend);
@@ -100,7 +100,7 @@
 				</button>
 				
 				<!-- Remove friend -->
-				<div class='flex flex-col items-center justify-center'>
+				<div class='mt-2 flex flex-col items-center justify-center'>
 					<button
 						class="btn-md btn variant-filled-error"
 						on:click={() => {

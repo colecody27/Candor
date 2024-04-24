@@ -13,7 +13,7 @@
 </div>
 
 <!-- Recent Applications -->
-<div class="w-3/4 m-auto mt-20">
+<div class="md:w-3/4 m-auto mt-20">
 	<h1 class="text-3xl mb-5">Recent Applications</h1>
 	<Accordion>
 		{#each recentApps as app}

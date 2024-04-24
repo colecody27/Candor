@@ -25,7 +25,7 @@
 	<!-- Resume -->
 	<div class="flex mt-5 ">
 		<h3 class="text-2xl mr-2">Resume:</h3>
-		<a class='badge variant-filled inline-block underline' href={resumeLink}>{app.resume}</a>
+		<a class='mt-1 inline-block underline' href={resumeLink}>{app.resume}</a>
 	</div>
 
 	<!-- Interviews  -->

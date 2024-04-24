@@ -1,5 +1,5 @@
 <script lang=ts>
-	import { Accordion, AccordionItem, TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
+	import { Accordion, AccordionItem, TabGroup, Tab, TabAnchor, popup } from '@skeletonlabs/skeleton';
 	import Appdropdown from '../../../components/appdropdown.svelte';
 	import Addapp from '../../../components/addapp.svelte';
 	import { dataHandlers } from '../../../lib/store/fireStore';
@@ -12,6 +12,11 @@
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	let tabSet = $authStore?.terms[0];
+	const popupHover = {
+		event: 'hover',
+		target: 'popupHover',
+		placement: 'bottom'
+	};
 
 	const fail: ToastSettings = {
 		message: 'Term must be unique 😕',
@@ -26,32 +31,6 @@
 		<div class="rounded-b-xl">
 			<h3 class='h5 text-center '>No recommendations at this time </h3>
 			 <h3 class='text-center'>☹️</h3>
-			<!-- <AccordionItem>
-				<svelte:fragment slot="lead"
-					><h3 class="text-lg">Software Engineer, AWS</h3></svelte:fragment
-				>
-				<svelte:fragment slot="summary">
-					<p class="text-right">Jan 3, 2024</p>
-				</svelte:fragment>
-				<svelte:fragment slot="content">
-					<div class="card p-4">
-						<Appdropdown />
-					</div>
-				</svelte:fragment>
-			</AccordionItem> 
-		</div>
-
-		<AccordionItem>
-			<svelte:fragment slot="lead"
-				><h3 class="text-lg">Software Engineer, Netflix</h3></svelte:fragment
-			>
-			<svelte:fragment slot="summary">
-				<p class="text-right">Feb 3, 2024</p>
-			</svelte:fragment>
-			<svelte:fragment slot="content">(content)</svelte:fragment>
-		</AccordionItem>
-	-->
-		<!-- ... -->
 	</Accordion>
 </div>
 
@@ -133,10 +112,14 @@
 									} 
 								});
 							}}
-							class="btn-icon h-8 w-8 variant-filled-secondary"
+							class="btn-icon h-8 w-8 variant-filled-secondary [&>*]:pointer-events-none" use:popup={popupHover}
 						>
 							<img class="h-6 w-6 m-auto" src={addIcon} alt="" />
 						</button>
+						<div class="card p-4 variant-filled-secondary" data-popup="popupHover">
+							<p>Create a term</p>
+							<div class="arrow variant-filled-secondary" />
+						</div>
 					</svelte:fragment>
 				</Tab>
 
@@ -151,7 +134,7 @@
 								{#if app?.Term === tabSet}
 									<AccordionItem>
 										<svelte:fragment slot="lead"
-											><h3 class="text-lg">{app?.Role}, {app?.Company}</h3></svelte:fragment
+											><h3 class="md:text-lg sm:text-sm">{app?.Role}, {app?.Company}</h3></svelte:fragment
 										>
 										<svelte:fragment slot="summary">
 											<p class="text-right">
@@ -191,7 +174,7 @@
 										}
 									});
 								}}
-								>Remove term
+								>Remove Term
 							</button>
 						</Accordion>
 					{/if}

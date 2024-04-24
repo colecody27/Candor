@@ -71,6 +71,6 @@
 			location = '';
 		}}
 		class=" btn btn-sm variant-filled-secondary flex m-auto justify-center mt-3"
-		><!--<img class="h-6 w-6 m-auto" src={addIcon} alt="" />-->Submit</button
+		><!--<img class="h-6 w-6 m-auto" src={addIcon} alt="" />-->Track</button
 	>
 </div>

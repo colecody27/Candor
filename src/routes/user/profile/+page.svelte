@@ -27,7 +27,7 @@
 </script>
 
 <!-- Container -->
-<div class="grid grid-cols-3 gap-2">
+<div class="max-w-7xl justify-center md:justify-between sm:justify-center m-auto flex-wrap flex">
 	<!-- Avatar -->
 	<div class="card p-4 w-60 flex flex-col size-fit shadow-xl m-5">
 		<div class="flex flex-col items-center justify-center">
@@ -75,7 +75,7 @@
 	</div>
 
 	<!-- Edit Profile -->
-	<div class="card p-4 flex col-span-2 max-w-3xl shadow-xl m-5 grid">
+	<div class="card p-4 flex col-span-2 max-w-3xl shadow-xl mt-5 md:mr-20 grid ">
 		<!-- Header -->
 		<header class="card-header border-b-2 border-gray-500"><h2 class="h3">Edit Profile</h2></header>
 		<!-- Form -->
@@ -93,17 +93,18 @@
 			</div>
 
 			<!-- Resumes -->
-			<h2 class="h4 mt-5">Resumes</h2>
+			<h2 class="h4 mt-5">Upload Resume</h2>
 			<input class="input" type="file" accept="application/pdf" bind:files={resumeFile} />
 			<!-- on:change= {async () => {await dataHandlers.updateDefaultResume($authStore.resume.name)}} -->
+			<h2 class="h4 mt-5">Default Resume</h2>
 			<select class='select mt-3' size=3 bind:value={$authStore.resume} >
 				{#each Object.entries(resumes) as resume }
 					<option value={resume[0]} on:click= {async () => {await dataHandlers.updateDefaultResume(resume[0])}}> {resume[0]} </option>
 				{/each}
 			</select>
 
-
-			<dl class="list-dl mt-5">
+			<h2 class="h4 mt-5">Resumes</h2>
+			<dl class="list-dl">
 				<!-- resumes: [resume, {name, university, count}]-->
 				{#each Object.entries(resumes).sort((a, b) => b[1].count - a[1].count) as resume }
 				<div>

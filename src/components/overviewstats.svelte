@@ -3,7 +3,6 @@
 
 	export let apps;
 	apps.sort((a, b) => b.Date.toDate() - a.Date.toDate())
-	console.log(apps)
 	const getAdvancements = () => {
 		let count = 0;
 		for (var i = 0; i < apps.length; i++) {
@@ -53,7 +52,7 @@
 </script>
 
 <div
-	class=" m-auto snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-10 w-1/4"
+	class=" m-auto snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-10 w-3/4"
 >
 	{#each stats as stat}
 		<div class="snap-center shrink-0 card py-10 w-30 md:w-80 text-center">

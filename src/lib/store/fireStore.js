@@ -57,7 +57,6 @@ export const dataHandlers = {
 			Date: Timestamp.fromDate(new Date())
 		};
 
-		console.log('add app ');
 		// UPDATE DB
 		const route = 'users/' + User.email + '/applications';
 		const docRef = await addDoc(collection(db, route), application);
@@ -115,9 +114,7 @@ export const dataHandlers = {
 
 		// Increment resume count
 		if (defaultResume.name != '') {
-			console.log(userInfo)
 			let resumeName = userInfo.apps.find((app) => app.Id === id).resume; 
-			console.log("resume name:" + resumeName)
 			await dataHandlers.updateResumeCount(resumeName, "decrement");
 		}
 
@@ -220,8 +217,6 @@ export const dataHandlers = {
 			authStore.update((curr) => {
 				curr.apps = curr.apps.filter((app) => app.Term != term)
 				curr.terms = curr.terms.filter((t) => t != term)
-				console.log("Apps:")
-				console.log(curr.apps)
 				return curr;
 			});
 		}
@@ -271,7 +266,6 @@ export const dataHandlers = {
 			const intIndx = getIndx();
 
 			if (intIndx >= 0) curr.apps.at(appIndx).Interviews.splice(intIndx, 1);
-			else console.log('here');
 			return curr;
 		});
 	},
@@ -480,7 +474,6 @@ export const dataHandlers = {
 		const appRoute = `users/${friend.email}/applications`;
 		const friendRef = doc(db, `users/${friend.email}`);
 		const friendDoc = await getDoc(friendRef);
-		console.log('Friend: ' + friendDoc.data().name);
 		const querySnpsht = await getDocs(collection(db, appRoute));
 		const tempApps = [];
 
@@ -492,7 +485,6 @@ export const dataHandlers = {
 			// Add reference to get doc from DB
 			docData.Id = doc.id;
 
-			console.log('App: ' + docData);
 			tempApps.push(docData);
 		});
 
@@ -581,7 +573,6 @@ export const dataHandlers = {
 			});
 			authStore.update((curr) => {
 				curr.name = req.name
-				console.log(curr.user)
 				return curr;
 			});
 		}
@@ -600,7 +591,6 @@ export const dataHandlers = {
 		// Upload resume and set as default
         if (req.resume != undefined) {
 			let resumeName = req.resume.name.slice(0, req.resume.name.indexOf(".")); 
-			console.log("resume name: " + resumeName)
             const storageRef = ref(storage, `users/${User.email}/${req.resume.name}`)
 			// Verify resume name is unique
 			if (resumeName in userData?.resumes)
@@ -653,8 +643,6 @@ export const dataHandlers = {
 					[`resumes.${resumeName}.count`]: increment(1)
 				});
 				authStore.update((curr) => {
-					console.log(curr.resumes)
-					console.log(resumeName)
 					curr.resumes[resumeName].count++;
 					return curr;
 				});
@@ -666,10 +654,7 @@ export const dataHandlers = {
 						[`resumes.${resumeName}.count`]: increment(-1)
 					});
 					authStore.update((curr) => {
-						console.log("Resumes: ")
-						console.log(curr.resumes)
 						curr.resumes[resumeName].count--;
-						console.log(curr.resumes[resumeName].count)
 						return curr;
 					});
 				}

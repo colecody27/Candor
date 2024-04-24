@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { popup } from '@skeletonlabs/skeleton';
-	import type { PopupSettings } from '@skeletonlabs/skeleton';
 
 	// {app?.Date.toDate().toLocaleDateString('en-us', {month:"short", day:"numeric", year:"numeric"})
 	// While date of applications is within 7 days of current day
