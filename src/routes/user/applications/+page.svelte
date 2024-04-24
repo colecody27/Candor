@@ -34,7 +34,7 @@
 	</Accordion>
 </div>
 
-<div class="w-3/4 m-auto mt-20">
+<div class="md:w-3/4 m-auto mt-20">
 	<!-- Applications -->
 	<div class=" m-auto mt-20">
 		<h1 class="text-3xl mb-5">Applications</h1>
