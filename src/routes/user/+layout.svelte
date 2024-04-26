@@ -113,7 +113,7 @@
 							</span>
 						</button>
 						<!--Title-->
-						<strong class="text-4xl">Candor</strong>
+						<strong class="text-2xl md:text-4xl ">Candor</strong>
 					</div>
 				</svelte:fragment>
 
@@ -132,14 +132,14 @@
 						<!--Avatar-->
 						{#if (name.split(' ').length < 2) }
 							<Avatar
-								class='m-auto'
+								class='m-auto '
 								initials={name.split(' ')[0].charAt(0)}
 								border="border-4 border-surface-300-600-token hover:!border-primary-500"
 								cursor="cursor-pointer"
 							></Avatar>
 						{:else}
 							<Avatar
-								class='m-auto'
+								class='m-auto '
 								initials={name.split(' ')[0].charAt(0) +
 								name.split(' ')[1].charAt(0)}
 								border="border-4 border-surface-300-600-token hover:!border-primary-500"
@@ -148,7 +148,7 @@
 						{/if}
 						<!-- -->
 						<!--Username-->
-						<h1 class="mr-2">{name}</h1>
+						<h1 class="text-sm md:text-lg mr-2">{name}</h1>
 						<Activity apps={$authStore.apps} />
 					</button>
 				</svelte:fragment>
